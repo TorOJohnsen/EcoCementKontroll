@@ -28,20 +28,30 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.readWeightTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
-            // Form1
+            // readWeightTimer
+            // 
+            this.readWeightTimer.Enabled = true;
+            this.readWeightTimer.Interval = 3000;
+            this.readWeightTimer.Tick += new System.EventHandler(this.readWeightTimer_Tick);
+            // 
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "Cement Kontroll";
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer readWeightTimer;
     }
 }
 

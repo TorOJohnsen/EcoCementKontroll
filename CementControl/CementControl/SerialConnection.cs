@@ -6,7 +6,7 @@ using Serilog;
 
 namespace CementControl
 {
-    public interface ISerialDevice
+    public interface ISerialConnection
     {
         event EventHandler<string> PortDataRead;
         void SendCommand(string cmd);
@@ -15,18 +15,18 @@ namespace CementControl
 
     
     
-    public class SerialDevice : ISerialDevice
+    public class SerialConnection : ISerialConnection
     {
         
         
         private readonly SerialPort _mySerialPort;
         public event EventHandler<string> PortDataRead;
-        private readonly ILogger _logger = Log.ForContext<SerialDevice>();
+        private readonly ILogger _logger = Log.ForContext<SerialConnection>();
 
 
 
 
-        public SerialDevice(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
+        public SerialConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
         {
 
             _mySerialPort = new SerialPort(serialPortNumber);

@@ -10,11 +10,11 @@ namespace CementControl
 {
     public class Service
     {
-        private readonly ISerialDevice _serialDevice;
+        private readonly ISerialConnection _serialConnection;
 
-        public Service(ISerialDevice serialDevice)
+        public Service(ISerialConnection serialConnection)
         {
-            _serialDevice = serialDevice;
+            _serialConnection = serialConnection;
         }
 
     }
