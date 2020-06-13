@@ -44,7 +44,7 @@ namespace CementControl
             _mySerialPort.Handshake = handshake;
             _mySerialPort.NewLine = newLine;
 
-            _mySerialPort.DataReceived += new SerialDataReceivedEventHandler(DataReceivedHandler);
+            _mySerialPort.DataReceived += DataReceivedHandler;
 
             _mySerialPort.Open();
             _logger.Debug($"Opened Serial port {serialPortNumber}");

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CementControl;
+using System;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Threading;
@@ -11,7 +12,7 @@ namespace CementControl.Tests
     public class SerialDeviceTests
     {
         private string _port = "COM10";
-        
+
         [TestMethod]
         public void ReadActivePortsIntegrationTests()
         {
@@ -74,6 +75,6 @@ namespace CementControl.Tests
             string local = data;
             Debug.Print($"Serial port read message: {local}");
         }
-
+       
     }
 }
