@@ -9,6 +9,8 @@ namespace CementControl
     public interface ISerialConnection
     {
         event EventHandler<string> PortDataRead;
+
+        void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake,string newLine);
         void SendCommand(string cmd);
         void ClosePort();
     }
@@ -17,16 +19,20 @@ namespace CementControl
     
     public class SerialConnection : ISerialConnection
     {
-        
-        
-        private readonly SerialPort _mySerialPort;
+
+
+        private int timeout_ms = 200;
+        private SerialPort _mySerialPort;
         public event EventHandler<string> PortDataRead;
         private readonly ILogger _logger = Log.ForContext<SerialConnection>();
 
+        public SerialConnection()
+        {
+
+        }
 
 
-
-        public SerialConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
+        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
         {
 
             _mySerialPort = new SerialPort(serialPortNumber);
@@ -45,6 +51,12 @@ namespace CementControl
         }
 
 
+        public void SetTimeout(int setTimeout_ms)
+        {
+            timeout_ms = setTimeout_ms;
+        }
+
+        
         public void SendCommand(string cmd)
         {
             _mySerialPort.Write(cmd);
@@ -62,23 +74,23 @@ namespace CementControl
             Stopwatch stopwatch = new Stopwatch();
 
             stopwatch.Start();
-            
-            Debug.Print("Data Received:");
+
+            _logger.Debug("Data Received:");
             
             string readChunk = sp.ReadExisting();
-            string indata = readChunk.TrimEnd();
+            string inndata = readChunk.TrimEnd();
 
-            while (!string.IsNullOrWhiteSpace(readChunk) && stopwatch.ElapsedMilliseconds < 200)
+            while (!string.IsNullOrWhiteSpace(readChunk) && stopwatch.ElapsedMilliseconds < timeout_ms)
             {
                 readChunk = sp.ReadExisting();
                 if (string.IsNullOrWhiteSpace(readChunk)) continue;
-                indata += readChunk.TrimEnd();
+                inndata += readChunk.TrimEnd();
                 Debug.Print(".");
-            } 
+            }
 
-            Debug.Print(indata);
+            _logger.Debug($">>>{inndata}<<<");
 
-            PortDataRead?.Invoke(this,indata);
+            PortDataRead?.Invoke(this,inndata);
         }
     }
 }
