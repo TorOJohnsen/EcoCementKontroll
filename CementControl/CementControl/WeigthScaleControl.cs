@@ -1,8 +1,10 @@
 ﻿using Serilog;
 using System;
 using System.Configuration;
+using System.Globalization;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace CementControl
 {
@@ -10,12 +12,12 @@ namespace CementControl
     {
 
         private readonly ISerialConnection _serialConnection;
-        private readonly double _voltageOn;
-        private readonly double _voltageOff;
-
         private readonly ILogger _logger = Log.ForContext<PowerSupplyControl>();
 
-        public event EventHandler<string> OnDataRead;
+        public event EventHandler<double> OnDataRead;
+
+        private double _measuredWeightTest = 668.4;
+        private bool _isTestMode = false;
 
 
         public WeigthScaleControl(ISerialConnection serialConnection)
@@ -39,8 +41,8 @@ namespace CementControl
         {
             Log.Information($"Weight scale raw data {data}");
 
-            string analyzedData = AnalyzeReceivedScaleData(data);
-            if (analyzedData != String.Empty)
+            double analyzedData = AnalyzeReceivedScaleData(data);
+            if (!double.IsNaN(analyzedData))
             {
                 OnDataRead?.Invoke(this, analyzedData);
             }
@@ -52,22 +54,36 @@ namespace CementControl
         }
 
 
-        private string AnalyzeReceivedScaleData(string inData)
+        public void SetTestModeOn()
+        {
+            _isTestMode = true;
+        }
+
+
+
+        private double AnalyzeReceivedScaleData(string inData)
         {
             //T,GS,   665.5,kg
             string searchString = ", *([0-9]+.[0-9]),kg";
-            string result;
-
+            double result = Double.NaN;
 
             Match match = Regex.Match(inData, searchString, RegexOptions.IgnoreCase);
 
             if (match.Success)
             {
-                result = match.Groups[1].Value;
-            }
-            else
-            {
-                result = String.Empty;
+                string matchValue = match.Groups[1].Value;
+                matchValue = matchValue.ToString(CultureInfo.InvariantCulture).Trim();
+
+                try
+                {
+                    result = Convert.ToDouble(matchValue);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error($"Error converting weight reading to decimal number. Read from scale: {inData}. Exception: {e.Message}");
+                    result = Double.NaN;
+                }
+
             }
 
             return result;

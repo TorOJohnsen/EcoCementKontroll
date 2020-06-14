@@ -30,7 +30,7 @@ namespace CementControl.Tests
 
         }
 
-        private void DataPortRead(object sender, string data)
+        private void DataPortRead(object sender, double data)
         {
             Debug.Write(data);
         }

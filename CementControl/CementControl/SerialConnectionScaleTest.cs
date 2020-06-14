@@ -26,7 +26,6 @@ namespace CementControl
 
         public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
         {
-
             _logger.Debug($"Opened Serial port {serialPortNumber}");
         }
 
