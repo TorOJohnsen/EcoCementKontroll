@@ -36,6 +36,7 @@ namespace CementControl
 
             InitConfigFileItems();
             InitWeightScale();
+            InitPowerSupply();
 
 
         }
@@ -47,6 +48,25 @@ namespace CementControl
             _powerSupplyComPort = ConfigurationManager.AppSettings["app:powerSupplyPort"];
             _isWeightScaleTestMode = Convert.ToBoolean(ConfigurationManager.AppSettings["app:scaleTestMode"]);
         }
+
+
+        private void InitPowerSupply()
+        {
+            iSerialConnection = new SerialConnection();
+
+
+            powerSupplyControl = new PowerSupplyControl(iSerialConnection);
+            powerSupplyControl.OpenConnection(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            powerSupplyControl.OnDataRead += ReadVoltageSetting;
+        }
+
+
+        private void ReadVoltageSetting(object sender, string reading)
+        {
+            Log.Debug($"Reading form power supply: {reading}");
+        }
+
+
 
 
         private void InitWeightScale()
