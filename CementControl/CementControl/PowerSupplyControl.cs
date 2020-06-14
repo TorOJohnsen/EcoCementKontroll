@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Serilog;
+using System;
 using System.Configuration;
-using System.Drawing.Imaging;
 using System.IO.Ports;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
-using Serilog;
 
 namespace CementControl
 {
@@ -23,15 +17,13 @@ namespace CementControl
         public event EventHandler<string> OnDataRead;
 
 
-
-
         public PowerSupplyControl(ISerialConnection serialConnection)
         {
             _serialConnection = serialConnection;
 
             _voltageOff = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOff"]);
-                
-            _voltageOn  = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOn"]);
+
+            _voltageOn = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOn"]);
         }
 
         public void OpenConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
