@@ -16,10 +16,6 @@ namespace CementControl
 
         public event EventHandler<double> OnDataRead;
 
-        private double _measuredWeightTest = 668.4;
-        private bool _isTestMode = false;
-
-
         public WeigthScaleControl(ISerialConnection serialConnection)
         {
             _serialConnection = serialConnection;
@@ -51,12 +47,6 @@ namespace CementControl
         public void ClosePort()
         {
             _serialConnection.ClosePort();
-        }
-
-
-        public void SetTestModeOn()
-        {
-            _isTestMode = true;
         }
 
 

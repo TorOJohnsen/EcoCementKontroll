@@ -15,10 +15,11 @@ namespace CementControl
         private static PowerSupplyControl powerSupplyControl;
 
         private static ISerialConnection iSerialConnection;
-        private static SerialConnectionScaleTest serialConnectionScaleTest;
 
         private string _scaleComPort;
         private string _powerSupplyComPort;
+
+        private bool _isWeightScaleTestMode;
 
 
         public MainWindow()
@@ -44,13 +45,22 @@ namespace CementControl
         {
             _scaleComPort = ConfigurationManager.AppSettings["app:weightScalePort"];
             _powerSupplyComPort = ConfigurationManager.AppSettings["app:powerSupplyPort"];
+            _isWeightScaleTestMode = Convert.ToBoolean(ConfigurationManager.AppSettings["app:scaleTestMode"]);
         }
 
 
         private void InitWeightScale()
         {
-            serialConnectionScaleTest = new SerialConnectionScaleTest();
-            weigthScaleControl = new WeigthScaleControl(serialConnectionScaleTest);
+            if (_isWeightScaleTestMode)
+            {
+                iSerialConnection = new SerialConnectionScaleTest();
+            }
+            else
+            {
+                iSerialConnection = new SerialConnection();
+            }
+
+            weigthScaleControl = new WeigthScaleControl(iSerialConnection);
             weigthScaleControl.OpenConnection(_scaleComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r");
             weigthScaleControl.OnDataRead += DisplayWeight;
         }
@@ -58,7 +68,7 @@ namespace CementControl
 
         private void DisplayWeight(object sender, double weight)
         {
-            label_weight.Text = weight.ToString();
+            label_weight.Text = $"{weight.ToString():F1}";
         }
 
 

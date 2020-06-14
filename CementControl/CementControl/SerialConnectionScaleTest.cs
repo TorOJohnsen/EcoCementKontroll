@@ -15,12 +15,23 @@ namespace CementControl
 
         private int timeout_ms = 67;
 
+        private bool _testModeCountDown = false;
+        private double _measuredWeightTest = 665.5;
+
         public event EventHandler<string> PortDataRead;
         private readonly ILogger _logger = Log.ForContext<SerialConnectionScaleTest>();
 
+        
+        
         public SerialConnectionScaleTest()
         {
 
+        }
+
+
+        public void SetTestMode()
+        {
+            _testModeCountDown = true;
         }
 
 
@@ -43,6 +54,17 @@ namespace CementControl
             Thread.Sleep(timeout_ms);
             PortDataRead?.Invoke(this, readDataOne);
             Thread.Sleep(timeout_ms);
+
+            if (_testModeCountDown)
+            {
+                readDataTwo = $"T,GS,   {_measuredWeightTest:F1},kg";
+                _measuredWeightTest -= 6.1;
+            }
+            else
+            {
+                _testModeCountDown = true;
+            }
+
             PortDataRead?.Invoke(this, readDataTwo);
 
         }
