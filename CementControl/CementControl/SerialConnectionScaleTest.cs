@@ -47,6 +47,9 @@ namespace CementControl
         }
 
         
+
+
+
         public void SendCommand(string cmd)
         {
             _logger.Debug($"Send command: {cmd}");
@@ -67,6 +70,11 @@ namespace CementControl
 
             PortDataRead?.Invoke(this, readDataTwo);
 
+        }
+
+        public void SendCommandLine(string cmd)
+        {
+            SendCommand(cmd);
         }
 
         public void ClosePort()

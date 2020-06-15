@@ -21,6 +21,13 @@ namespace CementControl
 
         private bool _isWeightScaleTestMode;
 
+        private bool _isStartLoadingCement = false;
+        private bool _isRunningCement = false;
+        private double _targetLoadCement;
+        private double _currentlyLoadedCement;
+        private double _startingWeigth;
+        
+
 
         public MainWindow()
         {
@@ -30,13 +37,13 @@ namespace CementControl
             App.ConfigureLogging();
 
             // Initialize app
-            Container = App.ConfigureDependencyInjection();
+            //  Container = App.ConfigureDependencyInjection();
 
             Log.Debug("TEst");
 
             InitConfigFileItems();
             InitWeightScale();
-            InitPowerSupply();
+            //InitPowerSupply();
 
 
         }
@@ -88,10 +95,36 @@ namespace CementControl
 
         private void DisplayWeight(object sender, double weight)
         {
-            label_weight.Text = $"{weight.ToString():F1}";
+            //labelReadWeight.Text = $"{weight.ToString():F1}";
+            Log.Debug($"Reading scale: {weight}");
+
+            // Clean this up
+            if (_isRunningCement)
+            {
+                if (weight <= _targetLoadCement)
+                {
+                    powerSupplyControl.TurnOff();
+                    _isRunningCement = false;
+                }
+
+                _currentlyLoadedCement = _startingWeigth - weight;
+                weight_loaded.Text = $"{_currentlyLoadedCement.ToString():F1}";
+
+            }
+            
+            
+            if (_isStartLoadingCement)
+            {
+                _targetLoadCement = weight - Convert.ToDouble(desiredCementLoad.Text);
+                _startingWeigth = weight;
+                _currentlyLoadedCement = 0.0;
+                powerSupplyControl.TurnOn();
+                _isRunningCement = true;
+                _isStartLoadingCement = false;
+                weight_loaded.Text = $"{_currentlyLoadedCement.ToString():F1}";
+            }
+
         }
-
-
 
 
         private void readWeightTimer_Tick(object sender, EventArgs e)
@@ -102,5 +135,12 @@ namespace CementControl
                 weigthScaleControl.ReadWeight();
             }
         }
+
+        private void startLoadWeight_Click(object sender, EventArgs e)
+        {
+            _isStartLoadingCement = true;
+        }
+
+
     }
 }

@@ -30,7 +30,7 @@ namespace CementControl
         public void ReadWeight()
         {
             string cmd = "READ";
-            _serialConnection.SendCommand(cmd);
+            _serialConnection.SendCommandLine(cmd);
         }
 
         private void DataReceived(object sender, string data)
@@ -53,8 +53,8 @@ namespace CementControl
 
         private double AnalyzeReceivedScaleData(string inData)
         {
-            //T,GS,   665.5,kg
-            string searchString = ", *([0-9]+.[0-9]),kg";
+            //T,GS,   665.5,kg   ST,GS,   685.5,kg
+            string searchString = "GS, *([0-9]+.[0-9]),kg";
             double result = Double.NaN;
 
             Match match = Regex.Match(inData, searchString, RegexOptions.IgnoreCase);

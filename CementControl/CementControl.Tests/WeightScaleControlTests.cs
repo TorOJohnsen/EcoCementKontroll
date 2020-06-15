@@ -13,20 +13,26 @@ namespace CementControl.Tests
     [TestClass]
     public class WeightScaleControlTests
     {
-        private string _port = "COM10";
+        private string _port = "COM3";
 
         [TestMethod()]
         public void TurnOnTest()
         {
-            var serial = new SerialConnectionScaleTest();
+            //var serial = new SerialConnectionScaleTest();
+            var serial = new SerialConnection();
             var ps = new WeigthScaleControl(serial);
             ps.OpenConnection(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r");
             ps.OnDataRead += DataPortRead;
 
             ps.ReadWeight();
-            Thread.Sleep(100);
+            Thread.Sleep(4000);
+            ps.ReadWeight();
+            Thread.Sleep(4000);
+            ps.ReadWeight();
+            Thread.Sleep(4000);
+            ps.ReadWeight();
+            Thread.Sleep(4000);
             ps.ClosePort();
-            Thread.Sleep(200);
 
         }
 
