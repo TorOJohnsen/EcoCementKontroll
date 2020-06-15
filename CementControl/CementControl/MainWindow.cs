@@ -26,7 +26,17 @@ namespace CementControl
         private double _targetLoadCement;
         private double _currentlyLoadedCement;
         private double _startingWeigth;
-        
+
+
+        /*
+        This exception was originally thrown at this call stack:
+        [External Code]
+        CementControl.MainWindow.DisplayWeight(object, double) in MainWindow.cs
+        CementControl.WeigthScaleControl.DataReceived(object, string) in WeigthScaleControl.cs
+        CementControl.SerialConnection.DataReceivedHandler(object, System.IO.Ports.SerialDataReceivedEventArgs) in SerialConnection.cs
+        [External Code]
+        System.InvalidOperationException: 'Cross-thread operation not valid: Control 'labelReadWeight' accessed from a thread other than the thread it was created on.'
+         */
 
 
         public MainWindow()
