@@ -27,7 +27,7 @@ namespace CementControl
         private double _currentlyLoadedCement;
         private double _startingWeigth;
 
-
+        delegate void SetTextCallback(string text);
         /*
         This exception was originally thrown at this call stack:
         [External Code]
@@ -42,6 +42,7 @@ namespace CementControl
         public MainWindow()
         {
             InitializeComponent();
+
 
             // Initialize logging
             App.ConfigureLogging();
@@ -95,6 +96,7 @@ namespace CementControl
             else
             {
                 iSerialConnection = new SerialConnection();
+                iSerialConnection.SetReadType(ReadMode.ReadTillSlashRSlashN);
             }
 
             weigthScaleControl = new WeigthScaleControl(iSerialConnection);
@@ -103,9 +105,31 @@ namespace CementControl
         }
 
 
+  
+
+        private void SetText(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.labelReadWeight.InvokeRequired)
+            {
+                SetTextCallback d = new SetTextCallback(SetText);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.labelReadWeight.Text = text;
+            }
+        }
+
+
+
+
         private void DisplayWeight(object sender, double weight)
         {
-            //labelReadWeight.Text = $"{weight.ToString():F1}";
+
+            SetText($"{weight.ToString():F1}");
             Log.Debug($"Reading scale: {weight}");
 
             // Clean this up

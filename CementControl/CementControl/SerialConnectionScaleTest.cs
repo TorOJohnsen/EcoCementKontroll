@@ -10,8 +10,8 @@ namespace CementControl
     
     public class SerialConnectionScaleTest : ISerialConnection
     {
-        private string readDataOne = "S";
-        private string readDataTwo = "T,GS,   665.5,kg";
+        private string readDataOne = "ST,GS,   682.0,kg";
+        private string readDataTwo = "ST,GS,   682.0,kg";
 
         private int timeout_ms = 67;
 
@@ -75,6 +75,10 @@ namespace CementControl
         public void SendCommandLine(string cmd)
         {
             SendCommand(cmd);
+        }
+
+        public void SetReadType(ReadMode readMode)
+        {
         }
 
         public void ClosePort()
