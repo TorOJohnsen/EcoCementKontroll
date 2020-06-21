@@ -3,6 +3,8 @@ using System;
 using System.Configuration;
 using System.IO.Ports;
 using System.Windows.Forms;
+using CementControl.DataAccess;
+using CementControl.Models;
 
 namespace CementControl
 {
@@ -10,6 +12,8 @@ namespace CementControl
     {
 
         static Autofac.IContainer Container { get; set; }
+
+        private CementContext db;
 
         private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
@@ -43,6 +47,9 @@ namespace CementControl
         {
             InitializeComponent();
 
+            // db context
+            db = new CementContext();
+
 
             // Initialize logging
             App.ConfigureLogging();
@@ -55,6 +62,11 @@ namespace CementControl
             InitConfigFileItems();
             InitWeightScale();
             //InitPowerSupply();
+
+
+            var cdb = new CementDataServices(db);
+            cdb.SaveCementData(new CementData(DateTime.Now, "DUDE", 23.5, 1));
+
 
 
         }
