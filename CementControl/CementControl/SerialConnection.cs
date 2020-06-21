@@ -11,7 +11,6 @@ namespace CementControl
         event EventHandler<string> PortDataRead;
 
         void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake,string newLine, ReadMode readMode);
-        string CheckConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake,string newLine, string command);
         void SendCommand(string cmd);
         void SendCommandLine(string cmd);
         void ClosePort();
@@ -70,36 +69,6 @@ namespace CementControl
             _mySerialPort.Open();
             _logger.Debug($"Opened Serial port {serialPortNumber}");
         }
-
-
-        public string CheckConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits,Handshake handshake, string newLine, string command)
-        {
-            var mySerialPort = new SerialPort(serialPortNumber);
-            mySerialPort.BaudRate = baudRate;
-            mySerialPort.Parity = parity;
-            mySerialPort.StopBits = stopBits;
-            mySerialPort.DataBits = dataBits;
-            mySerialPort.Handshake = handshake;
-            mySerialPort.NewLine = newLine;
-
-            string ret;
-
-            try
-            {
-                mySerialPort.Open();
-                mySerialPort.WriteLine(command);
-                mySerialPort.Close();
-                ret = mySerialPort.ReadLine();
-
-            }
-            catch (Exception e)
-            {
-                ret = String.Empty;
-            }
-
-            return ret;
-        }
-
 
 
         public void SetTimeout(int setTimeout_ms)

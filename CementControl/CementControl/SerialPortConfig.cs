@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Linq;
 using System.Security.Permissions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Serilog;
 
 namespace CementControl
 {
@@ -81,7 +84,6 @@ namespace CementControl
         private readonly ReadMode _readMode;
         private readonly string _checkCommand;
         private readonly string _checkRead;
-
 
 
         private readonly string _connectionSting;
@@ -191,46 +193,54 @@ namespace CementControl
 
     public class DiscoverSerialConnections
     {
-        private List<SerialPortConfigParameters> _ports;
-        private List<string> _comms;
-        //private ISerialConnection _iSerialConnection;
+        SerialPortConfigParameters _port;
+        private readonly ILogger _logger = Log.ForContext<SerialConnection>();
 
 
-        public DiscoverSerialConnections(List<SerialPortConfigParameters> ports)
+        public DiscoverSerialConnections(SerialPortConfigParameters port)
         {
-            _ports = ports;
-            _comms = SerialPort.GetPortNames().ToList();
-            //_iSerialConnection = serialConnection;
+            _port = port;
         }
 
 
-        public void Run()
+        public SerialPortConfigParameters Run()
         {
-            foreach (var comport in _comms)
+
+
+            _logger.Debug("Finding serial port being connected.");
+
+            // Get port list
+            List<string> comms = SerialPort.GetPortNames().ToList();
+            List<string> added;
+
+            _logger.Debug($"Devices connected start: {comms.ToString()}");
+
+
+
+            int devices = comms.Count;
+
+            Debug.Write("Plug device in");
+
+
+            while (SerialPort.GetPortNames().ToList().Count == devices)
             {
-                foreach (var device in _ports)
-                {
-                    if (device.SerialPortState == SerialPortState.Undiscovered)
-                    {
-
-                        // Connect
-                        var serial = new SerialConnection();
-                        string readData = serial.CheckConnection(comport, device.BaudRate, device.Parity, device.StopBits, device.DataBits, device.Handshake, device.NewLine, device.CheckCommand);
-
-                        // Evaluate the reply
-                        if (readData.Contains(device.CheckRead))
-                        {
-                            device.SerialPortState = device.DeviceType;
-                        }
-                        else
-                        {
-                            device.SerialPortState = SerialPortState.NotDefined;
-                        }
-                    }
-                }
+                Debug.Write("Venter ..");
+                Thread.Sleep(50);
             }
-        }
 
+            added = SerialPort.GetPortNames().ToList();
+            var newDevs = added.Except(comms).ToList();
+            _logger.Debug($"Devices connected end: {newDevs.ToString()}");
+
+            if (newDevs.Count == 1)
+            {
+                _port.ComPort = newDevs[0];
+                _port.SerialPortState = _port.DeviceType;
+                Debug.Write($"Found: {_port.ComPort}/{_port.DeviceType}");
+            }
+
+            return _port;
+        }
 
     }
 
