@@ -194,7 +194,7 @@ namespace CementControl
     public class DiscoverSerialConnections
     {
         SerialPortConfigParameters _port;
-        private readonly ILogger _logger = Log.ForContext<SerialConnection>();
+        private readonly ILogger _logger = Log.ForContext<DiscoverSerialConnections>();
 
 
         public DiscoverSerialConnections(SerialPortConfigParameters port)
@@ -206,37 +206,35 @@ namespace CementControl
         public SerialPortConfigParameters Run()
         {
 
-
             _logger.Debug("Finding serial port being connected.");
 
             // Get port list
             List<string> comms = SerialPort.GetPortNames().ToList();
             List<string> added;
 
-            _logger.Debug($"Devices connected start: {comms.ToString()}");
-
-
+            _logger.Debug($"Devices connected start: {comms.Count}");
 
             int devices = comms.Count;
 
-            Debug.Write("Plug device in");
+            _logger.Debug("Plug device in");
 
 
             while (SerialPort.GetPortNames().ToList().Count == devices)
             {
-                Debug.Write("Venter ..");
+                _logger.Debug("Venter ..");
                 Thread.Sleep(50);
             }
 
             added = SerialPort.GetPortNames().ToList();
             var newDevs = added.Except(comms).ToList();
-            _logger.Debug($"Devices connected end: {newDevs.ToString()}");
+            _logger.Debug($"Devices connected end: {newDevs.Count}");
 
             if (newDevs.Count == 1)
             {
                 _port.ComPort = newDevs[0];
                 _port.SerialPortState = _port.DeviceType;
-                Debug.Write($"Found: {_port.ComPort}/{_port.DeviceType}");
+                _logger.Debug($"Found: {_port.ComPort}/{_port.DeviceType}");
+                Thread.Sleep(2000); // Wait for the port to be configured in the system
             }
 
             return _port;

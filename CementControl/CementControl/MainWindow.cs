@@ -2,6 +2,7 @@
 using System;
 using System.Configuration;
 using System.IO.Ports;
+using System.Threading;
 using System.Windows.Forms;
 using CementControl.DataAccess;
 using CementControl.Models;
@@ -17,6 +18,11 @@ namespace CementControl
 
         private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
+
+        private static SerialPortConfigParameters _weightScaleConfig;
+        private static SerialPortConfigParameters _powerSupplyConfig;
+
+
 
         private static ISerialConnection iSerialConnection;
 
@@ -57,11 +63,16 @@ namespace CementControl
             // Initialize app
             //  Container = App.ConfigureDependencyInjection();
 
-            Log.Debug("TEst");
+            Log.Debug("Test");
 
             InitConfigFileItems();
+
+            ConfigurePowerSupplyComPort();
+            ConfigureWeightScaleComPort();
+
+
             InitWeightScale();
-            //InitPowerSupply();
+            InitPowerSupply();
 
 
             var cdb = new CementDataServices(db);
@@ -77,7 +88,55 @@ namespace CementControl
             _scaleComPort = ConfigurationManager.AppSettings["app:weightScalePort"];
             _powerSupplyComPort = ConfigurationManager.AppSettings["app:powerSupplyPort"];
             _isWeightScaleTestMode = Convert.ToBoolean(ConfigurationManager.AppSettings["app:scaleTestMode"]);
+
+            var cfgPwrSupply = new SerialPortConfig(ConfigurationManager.AppSettings["app:pwrSupplySerialConfig"]);
+            var cfgWeightScale = new SerialPortConfig(ConfigurationManager.AppSettings["app:scaleSerialConfig"]);
+
+            _powerSupplyConfig = cfgPwrSupply.GetConnectionObject();
+            _weightScaleConfig = cfgWeightScale.GetConnectionObject();
+
         }
+
+
+        private void ConfigurePowerSupplyComPort()
+        {
+
+            if (_powerSupplyComPort == "")
+            {
+                string message = "Silo kontroller";
+                string title = "Plug inn silo kontroller ... ";
+                MessageBox.Show(message, title);
+
+                var disc = new DiscoverSerialConnections(_powerSupplyConfig);
+                disc.Run();
+
+            }
+            else
+            {
+                _powerSupplyConfig.ComPort = _powerSupplyComPort;
+            }
+
+        }
+
+
+        private void ConfigureWeightScaleComPort()
+        {
+            if (_scaleComPort == "")
+            {
+                string message = "Vekt kontroller";
+                string title = "Plug inn vekt  ... ";
+                MessageBox.Show(message, title);
+
+                var disc = new DiscoverSerialConnections(_weightScaleConfig);
+                disc.Run();
+
+            }
+            else
+            {
+                _weightScaleConfig.ComPort = _scaleComPort;
+            }
+        }
+
 
 
         private void InitPowerSupply()
@@ -86,7 +145,10 @@ namespace CementControl
 
 
             _handlerRs232PowerSupply = new HandlerRs232PowerSupply(iSerialConnection);
-            _handlerRs232PowerSupply.OpenConnection(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
+            _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity, 
+                                                    _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake, 
+                                                    _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
+
             _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
         }
 
@@ -111,7 +173,9 @@ namespace CementControl
             }
 
             _handlerRs232WeigthScale = new HandlerRs232WeigthScale(iSerialConnection);
-            _handlerRs232WeigthScale.OpenConnection(_scaleComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r", ReadMode.ReadTillSlashRSlashN);
+            _handlerRs232WeigthScale.OpenConnection(_weightScaleConfig.ComPort, _weightScaleConfig.BaudRate, _weightScaleConfig.Parity,
+                                                    _weightScaleConfig.StopBits, _weightScaleConfig.DataBits, _weightScaleConfig.Handshake,
+                                                    _weightScaleConfig.NewLine, _weightScaleConfig.ReadMode);
             _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
         }
 
