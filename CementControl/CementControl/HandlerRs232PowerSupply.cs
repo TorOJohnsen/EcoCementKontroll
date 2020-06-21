@@ -5,19 +5,19 @@ using System.IO.Ports;
 
 namespace CementControl
 {
-    public class PowerSupplyControl
+    public class HandlerRs232PowerSupply
     {
 
         private readonly ISerialConnection _serialConnection;
         private readonly double _voltageOn;
         private readonly double _voltageOff;
 
-        private readonly ILogger _logger = Log.ForContext<PowerSupplyControl>();
+        private readonly ILogger _logger = Log.ForContext<HandlerRs232PowerSupply>();
 
         public event EventHandler<string> OnDataRead;
 
 
-        public PowerSupplyControl(ISerialConnection serialConnection)
+        public HandlerRs232PowerSupply(ISerialConnection serialConnection)
         {
             _serialConnection = serialConnection;
 

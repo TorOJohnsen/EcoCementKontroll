@@ -86,12 +86,13 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="PowerSupplyControl.cs" />
+    <Compile Include="HandlerRs232PowerSupply.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerialConnectionScaleTest.cs" />
     <Compile Include="SerialConnection.cs" />
-    <Compile Include="WeigthScaleControl.cs" />
+    <Compile Include="SerialPortConfig.cs" />
+    <Compile Include="HandlerRs232WeigthScale.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>

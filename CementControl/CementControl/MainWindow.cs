@@ -11,8 +11,8 @@ namespace CementControl
 
         static Autofac.IContainer Container { get; set; }
 
-        private static WeigthScaleControl weigthScaleControl;
-        private static PowerSupplyControl powerSupplyControl;
+        private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
+        private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
 
         private static ISerialConnection iSerialConnection;
 
@@ -32,7 +32,7 @@ namespace CementControl
         This exception was originally thrown at this call stack:
         [External Code]
         CementControl.MainWindow.DisplayWeight(object, double) in MainWindow.cs
-        CementControl.WeigthScaleControl.DataReceived(object, string) in WeigthScaleControl.cs
+        CementControl.HandlerRs232WeigthScale.DataReceived(object, string) in HandlerRs232WeigthScale.cs
         CementControl.SerialConnection.DataReceivedHandler(object, System.IO.Ports.SerialDataReceivedEventArgs) in SerialConnection.cs
         [External Code]
         System.InvalidOperationException: 'Cross-thread operation not valid: Control 'labelReadWeight' accessed from a thread other than the thread it was created on.'
@@ -73,9 +73,9 @@ namespace CementControl
             iSerialConnection = new SerialConnection();
 
 
-            powerSupplyControl = new PowerSupplyControl(iSerialConnection);
-            powerSupplyControl.OpenConnection(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
-            powerSupplyControl.OnDataRead += ReadVoltageSetting;
+            _handlerRs232PowerSupply = new HandlerRs232PowerSupply(iSerialConnection);
+            _handlerRs232PowerSupply.OpenConnection(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
         }
 
 
@@ -99,9 +99,9 @@ namespace CementControl
                 iSerialConnection.SetReadType(ReadMode.ReadTillSlashRSlashN);
             }
 
-            weigthScaleControl = new WeigthScaleControl(iSerialConnection);
-            weigthScaleControl.OpenConnection(_scaleComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r");
-            weigthScaleControl.OnDataRead += DisplayWeight;
+            _handlerRs232WeigthScale = new HandlerRs232WeigthScale(iSerialConnection);
+            _handlerRs232WeigthScale.OpenConnection(_scaleComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r");
+            _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
         }
 
 
@@ -137,7 +137,7 @@ namespace CementControl
             {
                 if (weight <= _targetLoadCement)
                 {
-                    powerSupplyControl.TurnOff();
+                    _handlerRs232PowerSupply.TurnOff();
                     _isRunningCement = false;
                 }
 
@@ -152,7 +152,7 @@ namespace CementControl
                 _targetLoadCement = weight - Convert.ToDouble(desiredCementLoad.Text);
                 _startingWeigth = weight;
                 _currentlyLoadedCement = 0.0;
-                powerSupplyControl.TurnOn();
+                _handlerRs232PowerSupply.TurnOn();
                 _isRunningCement = true;
                 _isStartLoadingCement = false;
                 weight_loaded.Text = $"{_currentlyLoadedCement.ToString():F1}";
@@ -164,9 +164,9 @@ namespace CementControl
         private void readWeightTimer_Tick(object sender, EventArgs e)
         {
             Log.Debug("Read weight timer triggered.");
-            if (weigthScaleControl != null)
+            if (_handlerRs232WeigthScale != null)
             {
-                weigthScaleControl.ReadWeight();
+                _handlerRs232WeigthScale.ReadWeight();
             }
         }
 

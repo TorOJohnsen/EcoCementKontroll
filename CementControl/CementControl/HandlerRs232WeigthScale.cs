@@ -8,15 +8,15 @@ using System.Windows.Forms;
 
 namespace CementControl
 {
-    public class WeigthScaleControl
+    public class HandlerRs232WeigthScale
     {
 
         private readonly ISerialConnection _serialConnection;
-        private readonly ILogger _logger = Log.ForContext<PowerSupplyControl>();
+        private readonly ILogger _logger = Log.ForContext<HandlerRs232PowerSupply>();
 
         public event EventHandler<double> OnDataRead;
 
-        public WeigthScaleControl(ISerialConnection serialConnection)
+        public HandlerRs232WeigthScale(ISerialConnection serialConnection)
         {
             _serialConnection = serialConnection;
         }

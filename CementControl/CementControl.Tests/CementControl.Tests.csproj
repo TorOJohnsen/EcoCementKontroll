@@ -87,6 +87,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SerialPortConfigTests.cs" />
     <Compile Include="WeightScaleControlTests.cs" />
     <Compile Include="PowerSupplyControlTests.cs" />
     <Compile Include="SerialDeviceTests.cs" />

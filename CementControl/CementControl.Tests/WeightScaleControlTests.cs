@@ -20,7 +20,7 @@ namespace CementControl.Tests
         {
             //var serial = new SerialConnectionScaleTest();
             var serial = new SerialConnection();
-            var ps = new WeigthScaleControl(serial);
+            var ps = new HandlerRs232WeigthScale(serial);
             ps.OpenConnection(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r");
             ps.OnDataRead += DataPortRead;
 
