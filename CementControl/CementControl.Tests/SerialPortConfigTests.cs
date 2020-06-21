@@ -20,6 +20,23 @@ namespace CementControl.Tests
         private readonly string _connString2 = "9600,None,One,8,None,\r,READ,GS";
 
 
+
+        [TestMethod()]
+        public void DiscoveryTest()
+        {
+            List<SerialPortConfigParameters> serialPortConfigParameterses = new List<SerialPortConfigParameters>();
+            var cfg1 = new SerialPortConfig(_connString1);
+            var cfg2 = new SerialPortConfig(_connString2);
+
+            serialPortConfigParameterses.Add(cfg1.GetConnectionObject());
+            serialPortConfigParameterses.Add(cfg2.GetConnectionObject());
+
+
+
+        }
+
+
+
         [TestMethod()]
         public void GetBaudRateTest()
         {
@@ -60,6 +77,22 @@ namespace CementControl.Tests
         {
             var cfg = new SerialPortConfig(_connString1);
             cfg.GetNewLine().Should().Be("\n");
+        }
+
+        [TestMethod()]
+        public void GetDiscoveryReadMatchTest()
+        {
+            var cfg = new SerialPortConfig(_connString1);
+            cfg.GetDiscoveryReadMatch().Should().Be("RND 320-KD3005P");
+
+        }
+
+        [TestMethod()]
+        public void GetDiscoverySendCommandTest()
+        {
+            var cfg = new SerialPortConfig(_connString1);
+            cfg.GetDiscoverySendCommand().Should().Be("*IDN?");
+
         }
     }
 }
