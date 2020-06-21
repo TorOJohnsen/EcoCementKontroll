@@ -16,8 +16,8 @@ namespace CementControl.Tests
     {
 
 
-        private readonly string _connString1 = "9600,None,One,8,None,\n";
-        private readonly string _connString2 = "9600,None,One,8,None,\r";
+        private readonly string _connString1 = "9600,None,One,8,None,\n,*IDN?,RND 320-KD3005P";
+        private readonly string _connString2 = "9600,None,One,8,None,\r,READ,GS";
 
 
         [TestMethod()]
