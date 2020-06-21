@@ -12,6 +12,7 @@ namespace CementControl
 
     public class SerialPortConfigParameters
     {
+        public SerialPortState DeviceType { get; set; }
         public string ComPort { get; set; }
         public int BaudRate { get; set; }
         public Parity Parity { get; set; }
@@ -29,8 +30,9 @@ namespace CementControl
 
         }
 
-        public SerialPortConfigParameters(int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
+        public SerialPortConfigParameters(SerialPortState deviceType, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
         {
+            DeviceType = deviceType;
             BaudRate = baudRate;
             Parity = parity;
             StopBits = stopBits;
@@ -69,6 +71,7 @@ namespace CementControl
 
         //(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
         // <add key = "app:pwrSypplySerialConfig" value="9600,None,One,8,None,\n" />
+        private readonly SerialPortState _deviceType;
         private readonly int _baudRate;
         private readonly Parity _parity;
         private readonly StopBits _stopBits;
@@ -87,22 +90,25 @@ namespace CementControl
         {
             _connectionSting = connectionString;
 
-
             List<string> connString = SplitList();
-            _baudRate = Convert.ToInt32(connString[0]);
-            Enum.TryParse(connString[1], out _parity);
-            Enum.TryParse(connString[2], out _stopBits);
-            _dataBits = Convert.ToInt32(connString[3]);
-            Enum.TryParse(connString[4], out _handshake);
-            _newLine = connString[5];
-            Enum.TryParse(connString[6], out _readMode);
-            _checkCommand = connString[7];
-            _checkRead = connString[8];
+
+
+            Enum.TryParse(connString[0], out _deviceType);
+            _baudRate = Convert.ToInt32(connString[1]);
+            Enum.TryParse(connString[2], out _parity);
+            Enum.TryParse(connString[3], out _stopBits);
+            _dataBits = Convert.ToInt32(connString[4]);
+            Enum.TryParse(connString[5], out _handshake);
+            _newLine = connString[6];
+            Enum.TryParse(connString[7], out _readMode);
+            _checkCommand = connString[8];
+            _checkRead = connString[9];
         }
 
         public SerialPortConfigParameters GetConnectionObject()
         {
             SerialPortConfigParameters spcp = new SerialPortConfigParameters();
+            spcp.DeviceType = _deviceType;
             spcp.BaudRate = _baudRate;
             spcp.Parity = _parity;
             spcp.StopBits = _stopBits;
@@ -121,6 +127,13 @@ namespace CementControl
         {
             return _connectionSting.Split(',').ToList();
         }
+
+
+        public SerialPortState GetDeviceType()
+        {
+            return _deviceType;
+        }
+
 
         public int GetBaudRate()
         {
@@ -202,17 +215,17 @@ namespace CementControl
 
                         // Connect
                         var serial = new SerialConnection();
-                        serial.Open(comport, device.BaudRate, device.Parity, device.StopBits, device.DataBits, device.Handshake, device.NewLine, device.ReadMode);
-
-                        // Send the test command
-
-                        // Close the connection
+                        string readData = serial.CheckConnection(comport, device.BaudRate, device.Parity, device.StopBits, device.DataBits, device.Handshake, device.NewLine, device.CheckCommand);
 
                         // Evaluate the reply
-
-                        // Update the object
-
-
+                        if (readData.Contains(device.CheckRead))
+                        {
+                            device.SerialPortState = device.DeviceType;
+                        }
+                        else
+                        {
+                            device.SerialPortState = SerialPortState.NotDefined;
+                        }
                     }
                 }
             }

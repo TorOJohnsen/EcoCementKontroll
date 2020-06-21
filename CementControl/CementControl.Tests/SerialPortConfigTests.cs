@@ -16,8 +16,8 @@ namespace CementControl.Tests
     {
 
 
-        private readonly string _connString1 = "9600,None,One,8,None,\n,ReadChunksTillNoneMore,*IDN?,RND 320-KD3005P";
-        private readonly string _connString2 = "9600,None,One,8,None,\r,ReadTillSlashRSlashN,READ,GS";
+        private readonly string _connString1 = "PowerSupply,9600,None,One,8,None,\n,ReadChunksTillNoneMore,*IDN?,RND 320-KD3005P";
+        private readonly string _connString2 = "WeightScale,9600,None,One,8,None,\r,ReadTillSlashRSlashN,READ,GS";
 
 
 
@@ -31,10 +31,19 @@ namespace CementControl.Tests
             serialPortConfigParameterses.Add(cfg1.GetConnectionObject());
             serialPortConfigParameterses.Add(cfg2.GetConnectionObject());
 
+            DiscoverSerialConnections disc = new DiscoverSerialConnections(serialPortConfigParameterses);
+            disc.Run();
 
 
         }
 
+
+        [TestMethod()]
+        public void GetDeviceTypeTest()
+        {
+            var cfg = new SerialPortConfig(_connString1);
+            cfg.GetDeviceType().Should().Be(SerialPortState.PowerSupply);
+        }
 
 
         [TestMethod()]

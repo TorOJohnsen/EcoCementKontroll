@@ -40,6 +40,12 @@ namespace CementControl
             _logger.Debug($"Opened Serial port {serialPortNumber}");
         }
 
+        public string CheckConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits,
+            Handshake handshake, string newLine, string command)
+        {
+            throw new NotImplementedException();
+        }
+
 
         public void SetTimeout(int setTimeout_ms)
         {
