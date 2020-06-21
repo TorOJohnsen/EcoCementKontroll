@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Configuration;
+using System.Drawing;
 using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
@@ -56,9 +57,11 @@ namespace CementControl
             // db context
             db = new CementContext();
 
-
             // Initialize logging
             App.ConfigureLogging();
+
+
+            // Init GUI
 
             // Initialize app
             //  Container = App.ConfigureDependencyInjection();
@@ -81,6 +84,23 @@ namespace CementControl
 
 
         }
+
+
+        private void IntiGui()
+        { 
+            UpdateLabel(label_weight, "Vekt tilkobling .. venter", Color.Red);
+            UpdateLabel(label_powerSupply, "Silo tilkobling .. venter", Color.Red);
+        }
+
+        
+        private void UpdateLabel(Label label, string message, Color color)
+        {
+            label.Text = message;
+            label.ForeColor = color;
+        }
+
+
+
 
 
         private void InitConfigFileItems()
@@ -150,6 +170,9 @@ namespace CementControl
                                                     _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
 
             _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
+            
+            UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", Color.Green);
+
         }
 
 
@@ -163,9 +186,11 @@ namespace CementControl
 
         private void InitWeightScale()
         {
+            Color color = Color.Green;
             if (_isWeightScaleTestMode)
             {
                 iSerialConnection = new SerialConnectionScaleTest();
+                color = Color.DarkOrange;
             }
             else
             {
@@ -177,10 +202,14 @@ namespace CementControl
                                                     _weightScaleConfig.StopBits, _weightScaleConfig.DataBits, _weightScaleConfig.Handshake,
                                                     _weightScaleConfig.NewLine, _weightScaleConfig.ReadMode);
             _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
+
+            UpdateLabel(label_weight, $"Vekt tilkobling, {_weightScaleConfig.ComPort}", color);
+
+
         }
 
 
-  
+
 
         private void SetText(string text)
         {
@@ -204,7 +233,7 @@ namespace CementControl
         private void DisplayWeight(object sender, double weight)
         {
 
-            SetText($"{weight.ToString():F1}");
+            SetText($"{weight:F1}");
             Log.Debug($"Reading scale: {weight}");
 
             // Clean this up
