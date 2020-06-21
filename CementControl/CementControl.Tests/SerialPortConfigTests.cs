@@ -16,8 +16,8 @@ namespace CementControl.Tests
     {
 
 
-        private readonly string _connString1 = "9600,None,One,8,None,\n,*IDN?,RND 320-KD3005P";
-        private readonly string _connString2 = "9600,None,One,8,None,\r,READ,GS";
+        private readonly string _connString1 = "9600,None,One,8,None,\n,ReadChunksTillNoneMore,*IDN?,RND 320-KD3005P";
+        private readonly string _connString2 = "9600,None,One,8,None,\r,ReadTillSlashRSlashN,READ,GS";
 
 
 
@@ -94,5 +94,15 @@ namespace CementControl.Tests
             cfg.GetDiscoverySendCommand().Should().Be("*IDN?");
 
         }
+
+        [TestMethod()]
+        public void GetReadModeTest()
+        {
+            var cfg = new SerialPortConfig(_connString1);
+            cfg.GetReadMode().Should().Be(ReadMode.ReadChunksTillNoneMore);
+
+        }
+
+        
     }
 }

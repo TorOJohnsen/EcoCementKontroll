@@ -13,18 +13,12 @@ namespace CementControl.Tests
     {
         private string _port = "COM10";
 
-        [TestMethod]
-        public void ReadActivePortsIntegrationTests()
-        {
-            var list = Discover.GetActiveSerialPorts();
-        }
-
 
         [TestMethod]
         public void SerialPortTestCommand()
         {
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("*IDN?");
             Thread.Sleep(2000);
@@ -37,7 +31,7 @@ namespace CementControl.Tests
         public void SerialPortSetVoltage()
         {
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("VSET1:12.00");
             Thread.Sleep(2000);
@@ -48,7 +42,7 @@ namespace CementControl.Tests
         public void SerialPortReadVoltage()
         {
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("VOUT1?");
             Thread.Sleep(2000);
@@ -61,7 +55,7 @@ namespace CementControl.Tests
         public void SerialPortSetVoltageOff()
         {
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("VSET1:0.00");
             Thread.Sleep(2000);

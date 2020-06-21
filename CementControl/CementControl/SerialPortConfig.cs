@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
+using System.Security.Permissions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -21,13 +22,14 @@ namespace CementControl
         public string CheckCommand { get; set; }
         public string CheckRead { get; set; }
         public SerialPortState SerialPortState { get; set; }
+        public ReadMode ReadMode { get; set; }
 
         public SerialPortConfigParameters()
         {
 
         }
 
-        public SerialPortConfigParameters(int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
+        public SerialPortConfigParameters(int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
         {
             BaudRate = baudRate;
             Parity = parity;
@@ -35,7 +37,8 @@ namespace CementControl
             DataBits = dataBits;
             Handshake = handshake;
             NewLine = newLine;
-            SerialPortState = SerialPortState.NotSetup;
+            ReadMode = readMode;
+            SerialPortState = SerialPortState.Undiscovered;
         }
 
         public void SetCommPort(string commPort)
@@ -53,7 +56,7 @@ namespace CementControl
 
     public enum SerialPortState
     {
-        NotSetup,
+        Undiscovered,
         NotDefined,
         PowerSupply,
         WeightScale
@@ -72,6 +75,7 @@ namespace CementControl
         private readonly int _dataBits;
         private readonly Handshake _handshake;
         private readonly string _newLine;
+        private readonly ReadMode _readMode;
         private readonly string _checkCommand;
         private readonly string _checkRead;
 
@@ -91,8 +95,9 @@ namespace CementControl
             _dataBits = Convert.ToInt32(connString[3]);
             Enum.TryParse(connString[4], out _handshake);
             _newLine = connString[5];
-            _checkCommand = connString[6];
-            _checkRead = connString[7];
+            Enum.TryParse(connString[6], out _readMode);
+            _checkCommand = connString[7];
+            _checkRead = connString[8];
         }
 
         public SerialPortConfigParameters GetConnectionObject()
@@ -147,6 +152,12 @@ namespace CementControl
             return _newLine;
         }
 
+        public ReadMode GetReadMode()
+        {
+            return _readMode;
+        }
+
+
         public string GetDiscoveryReadMatch()
         {
             return _checkRead;
@@ -159,22 +170,52 @@ namespace CementControl
     }
 
 
+
+
+
+
+
+
     public class DiscoverSerialConnections
     {
         private List<SerialPortConfigParameters> _ports;
         private List<string> _comms;
+        //private ISerialConnection _iSerialConnection;
 
 
         public DiscoverSerialConnections(List<SerialPortConfigParameters> ports)
         {
             _ports = ports;
             _comms = SerialPort.GetPortNames().ToList();
+            //_iSerialConnection = serialConnection;
         }
 
 
         public void Run()
         {
+            foreach (var comport in _comms)
+            {
+                foreach (var device in _ports)
+                {
+                    if (device.SerialPortState == SerialPortState.Undiscovered)
+                    {
 
+                        // Connect
+                        var serial = new SerialConnection();
+                        serial.Open(comport, device.BaudRate, device.Parity, device.StopBits, device.DataBits, device.Handshake, device.NewLine, device.ReadMode);
+
+                        // Send the test command
+
+                        // Close the connection
+
+                        // Evaluate the reply
+
+                        // Update the object
+
+
+                    }
+                }
+            }
         }
 
 

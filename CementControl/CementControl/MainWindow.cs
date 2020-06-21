@@ -74,7 +74,7 @@ namespace CementControl
 
 
             _handlerRs232PowerSupply = new HandlerRs232PowerSupply(iSerialConnection);
-            _handlerRs232PowerSupply.OpenConnection(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n");
+            _handlerRs232PowerSupply.OpenConnection(_powerSupplyComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
             _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
         }
 
@@ -96,11 +96,10 @@ namespace CementControl
             else
             {
                 iSerialConnection = new SerialConnection();
-                iSerialConnection.SetReadType(ReadMode.ReadTillSlashRSlashN);
             }
 
             _handlerRs232WeigthScale = new HandlerRs232WeigthScale(iSerialConnection);
-            _handlerRs232WeigthScale.OpenConnection(_scaleComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r");
+            _handlerRs232WeigthScale.OpenConnection(_scaleComPort, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r", ReadMode.ReadTillSlashRSlashN);
             _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
         }
 

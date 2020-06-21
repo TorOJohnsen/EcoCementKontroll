@@ -21,9 +21,9 @@ namespace CementControl
             _serialConnection = serialConnection;
         }
 
-        public void OpenConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
+        public void OpenConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
         {
-            _serialConnection.Open(serialPortNumber, baudRate, parity, stopBits, dataBits, handshake, newLine);
+            _serialConnection.Open(serialPortNumber, baudRate, parity, stopBits, dataBits, handshake, newLine, readMode);
             _serialConnection.PortDataRead += DataReceived;
         }
 

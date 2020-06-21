@@ -10,12 +10,9 @@ namespace CementControl
     {
         event EventHandler<string> PortDataRead;
 
-        void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake,string newLine);
+        void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake,string newLine, ReadMode readMode);
         void SendCommand(string cmd);
         void SendCommandLine(string cmd);
-
-        void SetReadType(ReadMode readMode);
-
         void ClosePort();
     }
 
@@ -45,7 +42,7 @@ namespace CementControl
         }
 
 
-        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine)
+        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
         {
 
             _mySerialPort = new SerialPort(serialPortNumber);
@@ -56,6 +53,7 @@ namespace CementControl
             _mySerialPort.DataBits = dataBits;
             _mySerialPort.Handshake = handshake;
             _mySerialPort.NewLine = newLine;
+            _readMode = readMode;
 
             if (_readMode == ReadMode.ReadChunksTillNoneMore)
             {
@@ -141,12 +139,6 @@ namespace CementControl
             _logger.Debug($">>>{inndata}<<<");
 
             PortDataRead?.Invoke(this, inndata);
-        }
-
-
-        public void SetReadType(ReadMode readMode)
-        {
-            _readMode = readMode;
         }
     }
 }
