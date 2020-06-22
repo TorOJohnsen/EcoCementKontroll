@@ -102,6 +102,10 @@
     <Compile Include="Migrations\202006212105450_Initial.designer.cs">
       <DependentUpon>202006212105450_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006222342057_Reworkmodel.cs" />
+    <Compile Include="Migrations\202006222342057_Reworkmodel.designer.cs">
+      <DependentUpon>202006222342057_Reworkmodel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CementData.cs" />
     <Compile Include="Models\CementDataServices.cs" />
@@ -116,6 +120,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006212105450_Initial.resx">
       <DependentUpon>202006212105450_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006222342057_Reworkmodel.resx">
+      <DependentUpon>202006222342057_Reworkmodel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

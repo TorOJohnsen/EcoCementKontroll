@@ -75,10 +75,9 @@ namespace CementControl
 
 
             var cdb = new CementDataServices(db);
-            cdb.SaveCementData(new CementData(DateTime.Now, "DUDE", 23.5, 1));
 
 
-            _execute = new ExecuteLoading(db, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
+            _execute = new ExecuteLoading(cdb, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
             _execute.CementLoadFinished += CompletedLoad;
         }
 
@@ -257,6 +256,7 @@ namespace CementControl
 
             _execute.UpdateCurrentWeight(weight);
             _execute.Execution();
+            _execute.SaveData();
 
             SetTextLoadedCementWeight($"{_execute.GetCurrentlyLoadedCement():F1}");
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using CementControl.DataAccess;
+using CementControl.Models;
 using Serilog;
 
 namespace CementControl.Execution
@@ -7,7 +8,7 @@ namespace CementControl.Execution
     public class ExecuteLoading
     {
 
-        private readonly CementContext _db;
+        private readonly CementDataServices _dbServices;
         private readonly HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private readonly HandlerRs232PowerSupply _handlerRs232PowerSupply;
 
@@ -26,9 +27,9 @@ namespace CementControl.Execution
         public event EventHandler CementLoadFinished;
 
 
-        public ExecuteLoading(CementContext db, HandlerRs232WeigthScale handlerRs232WeigthScale, HandlerRs232PowerSupply handlerRs232PowerSupply)
+        public ExecuteLoading(CementDataServices dbServices, HandlerRs232WeigthScale handlerRs232WeigthScale, HandlerRs232PowerSupply handlerRs232PowerSupply)
         {
-            _db = db;
+            _dbServices = dbServices;
             _handlerRs232WeigthScale = handlerRs232WeigthScale;
             _handlerRs232PowerSupply = handlerRs232PowerSupply;
             _executionState = ExecutionState.Init;
@@ -111,11 +112,14 @@ namespace CementControl.Execution
             OnCementLoadFinished();
         }
 
-        public void SaveData() { }
+        public void SaveData()
+        {
+            _dbServices.SaveCementData(GenerateCementData());
+        }
 
         public void UpdateCurrentWeight(double weight)
         {
-            _logger.Debug($"Weight: {weight:F1}V");
+            _logger.Debug($"CurrentWeight: {weight:F1}V");
             _currentSiloWeight = weight;
         }
 
@@ -138,7 +142,15 @@ namespace CementControl.Execution
             CementLoadFinished?.Invoke(this, EventArgs.Empty);
 
         }
+
+
+        internal CementData GenerateCementData()
+        {
+            return  (new CementData(_description,_currentSiloWeight,_executionState,_currentVoltage, _cementLoadGoal, _cementLoaded, _startingWeigth));
+        }
+
     }
+
 
 
     public enum ExecutionState

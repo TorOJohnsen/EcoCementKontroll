@@ -35,7 +35,7 @@ namespace CementControl
 
         private void DataReceived(object sender, string data)
         {
-            Log.Information($"Weight scale raw data {data}");
+            Log.Information($"CurrentWeight scale raw data {data}");
 
             double analyzedData = AnalyzeReceivedScaleData(data);
             if (!double.IsNaN(analyzedData))
