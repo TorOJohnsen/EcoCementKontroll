@@ -33,12 +33,6 @@ namespace CementControl
 
         private bool _isWeightScaleTestMode;
 
-        private bool _isStartLoadingCement = false;
-        private bool _isRunningCement = false;
-        private double _targetLoadCement;
-        private double _currentlyLoadedCement;
-        private double _startingWeigth;
-
         delegate void SetTextCallback(string text);
         /*
         This exception was originally thrown at this call stack:
@@ -84,11 +78,13 @@ namespace CementControl
 
 
             _execute = new ExecuteLoading(db, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
+            _execute.CementLoadFinished += CompletedLoad;
 
 
 
         }
 
+ 
 
         private void IntiGui()
         { 
@@ -186,7 +182,8 @@ namespace CementControl
 
         private void ReadVoltageSetting(object sender, string reading)
         {
-            _execute.UpdateVoltageSetting(reading);
+            var readingV = Convert.ToDouble(reading);
+            _execute.UpdateVoltageSetting(readingV);
             Log.Debug($"Reading form power supply: {reading}");
         }
 
@@ -245,32 +242,8 @@ namespace CementControl
             SetText($"{weight:F1}");
             Log.Debug($"Reading scale: {weight}");
 
-            // Clean this up
-            if (_isRunningCement)
-            {
-                if (weight <= _targetLoadCement)
-                {
-                    _handlerRs232PowerSupply.TurnOff();
-                    _isRunningCement = false;
-                }
-
-                _currentlyLoadedCement = _startingWeigth - weight;
-                weight_loaded.Text = $"{_currentlyLoadedCement.ToString():F1}";
-
-            }
-            
-            
-            if (_isStartLoadingCement)
-            {
-                _targetLoadCement = weight - Convert.ToDouble(desiredCementLoad.Text);
-                _startingWeigth = weight;
-                _currentlyLoadedCement = 0.0;
-                _handlerRs232PowerSupply.TurnOn();
-                _isRunningCement = true;
-                _isStartLoadingCement = false;
-                weight_loaded.Text = $"{_currentlyLoadedCement.ToString():F1}";
-            }
-
+            _execute.UpdateCurrentWeight(weight);
+            _execute.Execution();
         }
 
 
@@ -285,10 +258,22 @@ namespace CementControl
 
         private void startLoadWeight_Click(object sender, EventArgs e)
         {
-            _isStartLoadingCement = true;
+            // TODO
+            double cementToBeLoaded = Convert.ToDouble(desiredCementLoad.Text);
+            string description = textBoxDescription.Text;
+
+            _execute.StartLoading(cementToBeLoaded, description);
+            startLoadWeight.Enabled = false;
         }
 
-        
+
+        private void CompletedLoad(object sender, EventArgs e)
+        {
+            startLoadWeight.Enabled = true;
+        }
+
+
+
         // Exit Handler
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -296,7 +281,6 @@ namespace CementControl
             
             _handlerRs232PowerSupply?.SetVoltage(0.0);
             _handlerRs232PowerSupply?.ClosePort();
-
         }
     }
 }

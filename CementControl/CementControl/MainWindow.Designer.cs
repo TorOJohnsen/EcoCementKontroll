@@ -36,7 +36,7 @@
             this.desiredCementLoad = new System.Windows.Forms.TextBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.stopLoadWeight = new System.Windows.Forms.Button();
             this.startLoadWeight = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
@@ -104,7 +104,7 @@
             // 
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.label1);
-            this.panel3.Controls.Add(this.textBox1);
+            this.panel3.Controls.Add(this.textBoxDescription);
             this.panel3.Controls.Add(this.stopLoadWeight);
             this.panel3.Controls.Add(this.startLoadWeight);
             this.panel3.Controls.Add(this.label5);
@@ -124,15 +124,15 @@
             this.label1.TabIndex = 9;
             this.label1.Text = "Beskrivelse";
             // 
-            // textBox1
+            // textBoxDescription
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(8, 118);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(280, 26);
-            this.textBox1.TabIndex = 8;
-            this.textBox1.Text = "Hull nr, sted, etc";
-            this.textBox1.WordWrap = false;
+            this.textBoxDescription.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBoxDescription.Location = new System.Drawing.Point(8, 118);
+            this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.Size = new System.Drawing.Size(280, 26);
+            this.textBoxDescription.TabIndex = 8;
+            this.textBoxDescription.Text = "Hull nr, sted, etc";
+            this.textBoxDescription.WordWrap = false;
             // 
             // stopLoadWeight
             // 
@@ -258,7 +258,7 @@
         private System.Windows.Forms.Label label_weight;
         private System.Windows.Forms.Label label_powerSupply;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Button stopLoadWeight;
         private System.Windows.Forms.Label label2;
     }
