@@ -33,7 +33,8 @@ namespace CementControl
 
         private bool _isWeightScaleTestMode;
 
-        delegate void SetTextCallback(string text);
+        delegate void SetTextCallbackCurrentWeightDisplay(string text);
+        delegate void SetTextCallbackCurrentLoadedCementDisplay(string text);
         /*
         This exception was originally thrown at this call stack:
         [External Code]
@@ -79,9 +80,6 @@ namespace CementControl
 
             _execute = new ExecuteLoading(db, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
             _execute.CementLoadFinished += CompletedLoad;
-
-
-
         }
 
  
@@ -217,14 +215,14 @@ namespace CementControl
 
 
 
-        private void SetText(string text)
+        private void SetTextCurrentWeight(string text)
         {
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
             if (this.labelReadWeight.InvokeRequired)
             {
-                SetTextCallback d = new SetTextCallback(SetText);
+                SetTextCallbackCurrentWeightDisplay d = new SetTextCallbackCurrentWeightDisplay(SetTextCurrentWeight);
                 this.Invoke(d, new object[] { text });
             }
             else
@@ -233,17 +231,34 @@ namespace CementControl
             }
         }
 
+        private void SetTextLoadedCementWeight(string text)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.labelReadWeight.InvokeRequired)
+            {
+                SetTextCallbackCurrentLoadedCementDisplay d = new SetTextCallbackCurrentLoadedCementDisplay(SetTextLoadedCementWeight);
+                this.Invoke(d, new object[] { text });
+            }
+            else
+            {
+                this.weight_loaded.Text = text;
+            }
+        }
 
 
 
         private void DisplayWeight(object sender, double weight)
         {
 
-            SetText($"{weight:F1}");
+            SetTextCurrentWeight($"{weight:F1}");
             Log.Debug($"Reading scale: {weight}");
 
             _execute.UpdateCurrentWeight(weight);
             _execute.Execution();
+
+            SetTextLoadedCementWeight($"{_execute.GetCurrentlyLoadedCement():F1}");
         }
 
 

@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using CementControl.DataAccess;
 using Serilog;
 
@@ -58,8 +52,6 @@ namespace CementControl.Execution
 
             // Set execution state
             _executionState = ExecutionState.Loading;
-
-            OnCementLoadFinished();
         }
 
         private void LoadingFinished()
@@ -72,6 +64,7 @@ namespace CementControl.Execution
             // Set execution state
             _executionState = ExecutionState.FinishedLoading;
 
+            OnCementLoadFinished();
         }
 
 
