@@ -6,6 +6,7 @@ using System.IO.Ports;
 using System.Threading;
 using System.Windows.Forms;
 using CementControl.DataAccess;
+using CementControl.Execution;
 using CementControl.Models;
 
 namespace CementControl
@@ -23,7 +24,7 @@ namespace CementControl
         private static SerialPortConfigParameters _weightScaleConfig;
         private static SerialPortConfigParameters _powerSupplyConfig;
 
-
+        private static ExecuteLoading _execute;
 
         private static ISerialConnection iSerialConnection;
 
@@ -80,6 +81,9 @@ namespace CementControl
 
             var cdb = new CementDataServices(db);
             cdb.SaveCementData(new CementData(DateTime.Now, "DUDE", 23.5, 1));
+
+
+            _execute = new ExecuteLoading(db, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
 
 
 
@@ -158,7 +162,6 @@ namespace CementControl
         }
 
 
-
         private void InitPowerSupply()
         {
             iSerialConnection = new SerialConnection();
@@ -183,6 +186,7 @@ namespace CementControl
 
         private void ReadVoltageSetting(object sender, string reading)
         {
+            _execute.UpdateVoltageSetting(reading);
             Log.Debug($"Reading form power supply: {reading}");
         }
 

@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="App.cs" />
     <Compile Include="DataAccess\CementContext.cs" />
+    <Compile Include="Execution\ExecuteLoading.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
     </Compile>
