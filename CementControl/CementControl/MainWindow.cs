@@ -13,7 +13,7 @@ namespace CementControl
     public partial class MainWindow : Form
     {
 
-        static Autofac.IContainer Container { get; set; }
+        //static Autofac.IContainer Container { get; set; }
 
         private CementContext db;
 
@@ -171,7 +171,12 @@ namespace CementControl
 
             _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
             
+            // Initialize to off
+            _handlerRs232PowerSupply.SetVoltage(0.0);
+
             UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", Color.Green);
+
+
 
         }
 
@@ -279,6 +284,15 @@ namespace CementControl
             _isStartLoadingCement = true;
         }
 
+        
+        // Exit Handler
+        private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _handlerRs232WeigthScale?.ClosePort();
+            
+            _handlerRs232PowerSupply?.SetVoltage(0.0);
+            _handlerRs232PowerSupply?.ClosePort();
 
+        }
     }
 }
