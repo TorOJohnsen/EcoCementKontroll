@@ -22,7 +22,7 @@ namespace CementControl
         public StopBits StopBits { get; set; }
         public int DataBits { get; set; }
         public Handshake Handshake { get; set; }
-        public string NewLine { get; set; }
+        public NewLine NewLine { get; set; }
         public string CheckCommand { get; set; }
         public string CheckRead { get; set; }
         public SerialPortState SerialPortState { get; set; }
@@ -33,7 +33,7 @@ namespace CementControl
 
         }
 
-        public SerialPortConfigParameters(SerialPortState deviceType, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
+        public SerialPortConfigParameters(SerialPortState deviceType, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
         {
             DeviceType = deviceType;
             BaudRate = baudRate;
@@ -67,6 +67,29 @@ namespace CementControl
         WeightScale
     }
 
+    public enum NewLine
+    {
+        SlashN,
+        SlashR
+    }
+
+    public static class NewLineHelper
+    {
+        public static string ToString(NewLine newLine)
+        {
+            string stringVers = "\n";
+            if (newLine == NewLine.SlashN)
+            {
+                stringVers = "\n";
+            } 
+            else if (newLine == NewLine.SlashR)
+            {
+                stringVers = "\r";
+            }
+            return stringVers;
+        }
+    }
+
 
 
     public class SerialPortConfig
@@ -80,7 +103,7 @@ namespace CementControl
         private readonly StopBits _stopBits;
         private readonly int _dataBits;
         private readonly Handshake _handshake;
-        private readonly string _newLine;
+        private readonly NewLine _newLine;
         private readonly ReadMode _readMode;
         private readonly string _checkCommand;
         private readonly string _checkRead;
@@ -101,7 +124,7 @@ namespace CementControl
             Enum.TryParse(connString[3], out _stopBits);
             _dataBits = Convert.ToInt32(connString[4]);
             Enum.TryParse(connString[5], out _handshake);
-            _newLine = connString[6];
+            Enum.TryParse(connString[6], out _newLine);
             Enum.TryParse(connString[7], out _readMode);
             _checkCommand = connString[8];
             _checkRead = connString[9];
@@ -119,6 +142,7 @@ namespace CementControl
             spcp.NewLine = _newLine;
             spcp.CheckCommand = _checkCommand;
             spcp.CheckRead = _checkRead;
+            spcp.ReadMode = _readMode;
 
             return spcp;
         }
@@ -162,7 +186,7 @@ namespace CementControl
             return _handshake;
         }
 
-        public string GetNewLine()
+        public NewLine GetNewLine()
         {
             return _newLine;
         }

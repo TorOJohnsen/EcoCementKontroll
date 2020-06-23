@@ -35,7 +35,7 @@ namespace CementControl
         }
 
 
-        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
+        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
         {
             _logger.Debug($"Opened Serial port {serialPortNumber}");
         }

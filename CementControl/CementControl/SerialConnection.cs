@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.PerformanceData;
 using System.IO.Ports;
@@ -10,7 +11,7 @@ namespace CementControl
     {
         event EventHandler<string> PortDataRead;
 
-        void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake,string newLine, ReadMode readMode);
+        void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode);
         void SendCommand(string cmd);
         void SendCommandLine(string cmd);
         void ClosePort();
@@ -20,7 +21,8 @@ namespace CementControl
     public enum ReadMode
     {
         ReadChunksTillNoneMore,
-        ReadTillSlashRSlashN
+        ReadTillSlashRSlashN,
+        ReadLine
     }
 
     
@@ -29,7 +31,7 @@ namespace CementControl
     {
 
 
-        private int timeout_ms = 1000;
+        private int timeout_ms = 1500;
         private SerialPort _mySerialPort;
         public event EventHandler<string> PortDataRead;
         private readonly ILogger _logger = Log.ForContext<SerialConnection>();
@@ -42,7 +44,7 @@ namespace CementControl
         }
 
 
-        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
+        public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
         {
 
             _mySerialPort = new SerialPort(serialPortNumber);
@@ -52,19 +54,26 @@ namespace CementControl
             _mySerialPort.StopBits = stopBits;
             _mySerialPort.DataBits = dataBits;
             _mySerialPort.Handshake = handshake;
-            _mySerialPort.NewLine = newLine;
+            _mySerialPort.NewLine = NewLineHelper.ToString(newLine);
             _readMode = readMode;
 
-            if (_readMode == ReadMode.ReadChunksTillNoneMore)
+            
+            
+            
+            switch (_readMode)
             {
-                _mySerialPort.DataReceived += DataReceivedHandlerChunks;
-            }
-            else
-            {
-                _mySerialPort.DataReceived += DataReceivedHandlerSlashRSlashN;
+                case ReadMode.ReadChunksTillNoneMore:
+                    _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
+                    break;
+                case ReadMode.ReadTillSlashRSlashN:
+                    _mySerialPort.DataReceived += DataReceivedHandlerSlashRSlashN;
+                    break;
+                case ReadMode.ReadLine:
+                    _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
+                    break;
             }
 
-            
+
 
             _mySerialPort.Open();
             _logger.Debug($"Opened Serial port {serialPortNumber}");
@@ -98,21 +107,13 @@ namespace CementControl
         private void DataReceivedHandlerSlashRSlashN(object sender, SerialDataReceivedEventArgs e)
         {
             SerialPort sp = (SerialPort)sender;
-            Stopwatch stopwatch = new Stopwatch();
-
-            stopwatch.Start();
-
             _logger.Debug("Data Received:");
-
             string saveSpNewline = sp.NewLine;
             sp.NewLine = "\r\n";
-
-
             string inndata = sp.ReadLine();
-
             sp.NewLine = saveSpNewline;
-            _logger.Debug($">>>{inndata}<<<");
 
+            _logger.Debug($">>>{inndata}<<<");
             PortDataRead?.Invoke(this, inndata);
         }
 
@@ -142,6 +143,41 @@ namespace CementControl
 
             PortDataRead?.Invoke(this, inndata);
         }
+
+
+        private void DataReceivedHandlerReadLine(object sender, SerialDataReceivedEventArgs e)
+        {
+            SerialPort sp = (SerialPort)sender;
+
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+
+            //sp.ReadTimeout = 500;
+            //sp.NewLine = "\n";
+            //sp.NewLine = "\r";
+            //sp.NewLine = "\r\n";
+            _logger.Debug("Data Received:");
+            string inndata = String.Empty;
+            //List<string> lstList = new List<string>();
+
+            while (stopwatch.ElapsedMilliseconds < 500)
+            {
+                //string chunk = sp.ReadExisting();
+                //inndata += chunk;
+                inndata += sp.ReadExisting();
+                //if (!string.IsNullOrEmpty(chunk))
+                //{
+                //    lstList.Add($"{stopwatch.ElapsedMilliseconds}-{chunk}");
+                //}
+            }
+            _logger.Debug($">>>{inndata}<<<");
+
+            PortDataRead?.Invoke(this, inndata);
+        }
+
+
+
+
     }
 }
 

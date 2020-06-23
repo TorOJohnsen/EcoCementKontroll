@@ -20,7 +20,7 @@ namespace CementControl.Tests
         {
             var serial = new SerialConnection();
             var ps = new HandlerRs232PowerSupply(serial);
-            ps.OpenConnection(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadTillSlashRSlashN);
+            ps.OpenConnection(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, NewLine.SlashN, ReadMode.ReadTillSlashRSlashN);
             ps.OnDataRead += DataPortRead;
 
             ps.TurnOn();

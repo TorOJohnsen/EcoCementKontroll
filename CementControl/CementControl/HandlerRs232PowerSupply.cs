@@ -26,7 +26,7 @@ namespace CementControl
             _voltageOn = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOn"]);
         }
 
-        public void OpenConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, string newLine, ReadMode readMode)
+        public void OpenConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
         {
             _serialConnection.Open(serialPortNumber, baudRate, parity, stopBits, dataBits, handshake, newLine, readMode);
             _serialConnection.PortDataRead += DataReceived;

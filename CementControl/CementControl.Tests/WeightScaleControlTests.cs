@@ -21,7 +21,7 @@ namespace CementControl.Tests
             //var serial = new SerialConnectionScaleTest();
             var serial = new SerialConnection();
             var ps = new HandlerRs232WeigthScale(serial);
-            ps.OpenConnection(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\r", ReadMode.ReadTillSlashRSlashN);
+            ps.OpenConnection(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, NewLine.SlashR, ReadMode.ReadTillSlashRSlashN);
             ps.OnDataRead += DataPortRead;
 
             ps.ReadWeight();

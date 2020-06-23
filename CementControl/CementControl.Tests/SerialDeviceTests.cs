@@ -11,17 +11,23 @@ namespace CementControl.Tests
     [TestClass]
     public class SerialDeviceTests
     {
-        private string _port = "COM10";
+        private string _port = "COM3";
+        private static AutoResetEvent event_1 = new AutoResetEvent(false);
 
 
         [TestMethod]
         public void SerialPortTestCommand()
         {
+
+            event_1.Reset();
+
+            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            Trace.WriteLine($"SerialPortTestCommand");
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, NewLine.SlashN, ReadMode.ReadLine);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("*IDN?");
-            Thread.Sleep(2000);
+            event_1.WaitOne(timeout: TimeSpan.FromSeconds(3));
             serial.ClosePort();
 
         }
@@ -30,22 +36,29 @@ namespace CementControl.Tests
         [TestMethod]
         public void SerialPortSetVoltage()
         {
+            event_1.Reset();
+            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            Trace.WriteLine($"SerialPortSetVoltage");
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, NewLine.SlashN, ReadMode.ReadChunksTillNoneMore);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("VSET1:12.00");
-            Thread.Sleep(2000);
+            serial.SendCommand("VOUT1?");
+            serial.PortDataRead += serial_dataReceived;
+            event_1.WaitOne(timeout: TimeSpan.FromSeconds(3));
             serial.ClosePort();
 
         }
         [TestMethod]
         public void SerialPortReadVoltage()
         {
+            event_1.Reset();
+            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            Trace.WriteLine($"SerialPortReadVoltage");
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
-            serial.PortDataRead += serial_dataReceived;
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, NewLine.SlashN, ReadMode.ReadChunksTillNoneMore);
             serial.SendCommand("VOUT1?");
-            Thread.Sleep(2000);
+            event_1.WaitOne(timeout: TimeSpan.FromSeconds(3));
             serial.ClosePort();
 
 
@@ -54,11 +67,16 @@ namespace CementControl.Tests
         [TestMethod]
         public void SerialPortSetVoltageOff()
         {
+            event_1.Reset();
+            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
+            Trace.WriteLine($"SerialPortSetVoltageOff");
             var serial = new SerialConnection();
-            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, "\n", ReadMode.ReadChunksTillNoneMore);
+            serial.Open(_port, 9600, Parity.None, StopBits.One, 8, Handshake.None, NewLine.SlashN, ReadMode.ReadChunksTillNoneMore);
             serial.PortDataRead += serial_dataReceived;
             serial.SendCommand("VSET1:0.00");
-            Thread.Sleep(2000);
+            Thread.Sleep(200);
+            serial.SendCommand("VOUT1?");
+            event_1.WaitOne(timeout: TimeSpan.FromSeconds(3));
             serial.ClosePort();
 
         }
@@ -66,8 +84,10 @@ namespace CementControl.Tests
 
         private void serial_dataReceived(object sender, string data)
         {
+            Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
             string local = data;
-            Debug.Print($"Serial port read message: {local}");
+            Trace.WriteLine($"Serial port read message: {local}");
+            event_1.Set();
         }
        
     }
