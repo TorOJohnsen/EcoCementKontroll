@@ -265,10 +265,8 @@ namespace CementControl
         private void readWeightTimer_Tick(object sender, EventArgs e)
         {
             Log.Debug("Read weight timer triggered.");
-            if (_handlerRs232WeigthScale != null)
-            {
-                _handlerRs232WeigthScale.ReadWeight();
-            }
+            _handlerRs232WeigthScale?.ReadWeight();
+            _handlerRs232PowerSupply?.GetVoltage();
         }
 
         private void startLoadWeight_Click(object sender, EventArgs e)
@@ -296,6 +294,11 @@ namespace CementControl
             
             _handlerRs232PowerSupply?.SetVoltage(0.0);
             _handlerRs232PowerSupply?.ClosePort();
+        }
+
+        private void stopLoadWeight_Click(object sender, EventArgs e)
+        {
+            _execute.StopLoading();
         }
     }
 }

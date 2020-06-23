@@ -49,7 +49,7 @@ namespace CementControl.Execution
 
             // Turn on silo loader
             _handlerRs232PowerSupply.TurnOn();
-            _handlerRs232PowerSupply.GetVoltage();
+            //_handlerRs232PowerSupply.GetVoltage();
 
             // Set execution state
             _executionState = ExecutionState.Loading;
@@ -79,7 +79,7 @@ namespace CementControl.Execution
         {
             if (_executionState == ExecutionState.Loading)
             {
-                _cementLoaded = _startingWeigth - _currentSiloWeight;
+                _cementLoaded = _startingWeigth -_currentSiloWeight;
 
                 if (IsFinishedLoading())
                 {
@@ -119,7 +119,7 @@ namespace CementControl.Execution
 
         public void UpdateCurrentWeight(double weight)
         {
-            _logger.Debug($"CurrentWeight: {weight:F1}V");
+            _logger.Debug($"CurrentWeight: {weight:F1}kg");
             _currentSiloWeight = weight;
         }
 

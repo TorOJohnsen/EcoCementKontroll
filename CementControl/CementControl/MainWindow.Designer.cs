@@ -144,6 +144,7 @@
             this.stopLoadWeight.TabIndex = 7;
             this.stopLoadWeight.Text = "Stopp";
             this.stopLoadWeight.UseVisualStyleBackColor = false;
+            this.stopLoadWeight.Click += new System.EventHandler(this.stopLoadWeight_Click);
             // 
             // startLoadWeight
             // 

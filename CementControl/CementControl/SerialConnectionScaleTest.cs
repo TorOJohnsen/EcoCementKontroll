@@ -10,28 +10,17 @@ namespace CementControl
     
     public class SerialConnectionScaleTest : ISerialConnection
     {
-        private string readDataOne = "ST,GS,   682.0,kg";
         private string readDataTwo = "ST,GS,   682.0,kg";
-
-        private int timeout_ms = 67;
-
-        private bool _testModeCountDown = false;
         private double _measuredWeightTest = 665.5;
 
         public event EventHandler<string> PortDataRead;
         private readonly ILogger _logger = Log.ForContext<SerialConnectionScaleTest>();
+        private int timeout_ms;
 
-        
-        
+
         public SerialConnectionScaleTest()
         {
 
-        }
-
-
-        public void SetTestMode()
-        {
-            _testModeCountDown = true;
         }
 
 
@@ -59,23 +48,10 @@ namespace CementControl
         public void SendCommand(string cmd)
         {
             _logger.Debug($"Send command: {cmd}");
-
-            Thread.Sleep(timeout_ms);
-            PortDataRead?.Invoke(this, readDataOne);
-            Thread.Sleep(timeout_ms);
-
-            if (_testModeCountDown)
-            {
-                readDataTwo = $"T,GS,   {_measuredWeightTest:F1},kg";
-                _measuredWeightTest -= 6.1;
-            }
-            else
-            {
-                _testModeCountDown = true;
-            }
+            readDataTwo = $"T,GS,   {_measuredWeightTest:F1},kg";
+            _measuredWeightTest -= 6.1;
 
             PortDataRead?.Invoke(this, readDataTwo);
-
         }
 
         public void SendCommandLine(string cmd)
