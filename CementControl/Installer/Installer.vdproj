@@ -290,6 +290,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
         "Release"
@@ -314,6 +322,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -866,9 +882,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Installer"
+        "ProductName" = "8:CementKontroll"
         "ProductCode" = "8:{522DA500-6950-494A-9F8B-B025D517BC4B}"
-        "PackageCode" = "8:{F7DD57D1-CE93-4343-B549-5F12B31C7F5C}"
+        "PackageCode" = "8:{E8A70F2A-6CD0-4E54-92E4-71510CB75085}"
         "UpgradeCode" = "8:{6E887C49-07E6-439B-9E5A-6F727A7C5FB3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -876,12 +892,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:EcoInjeksjon"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Installer"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
+        "ARPCONTACT" = "8:EcoInjeksjon"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -1417,7 +1433,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8E4511BBE0D94177B96D51C8642F54E0"
             {
-            "SourcePath" = "8:..\\CementControl\\obj\\Debug\\CementControl.exe"
+            "SourcePath" = "8:..\\CementControl\\obj\\Release\\CementControl.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5B9F73C376C44E519F13071B7FD4EE1D"
