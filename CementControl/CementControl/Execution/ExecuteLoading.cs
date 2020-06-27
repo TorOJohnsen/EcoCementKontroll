@@ -19,6 +19,7 @@ namespace CementControl.Execution
         private double _cementLoaded = 0.0;
         private double _currentVoltage = 0.0;
         private double _startingWeigth = 0.0;
+        private double _averageWeight = 0.0;
 
 
         private ExecutionState _executionState;

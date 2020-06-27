@@ -82,13 +82,13 @@
         "Entry"
         {
         "MsmKey" = "8:_4B0F100BF69BDD12994071136D8D05A7"
-        "OwnerKey" = "8:_E8DAB720C8215DD1290F02AD859ABF1B"
+        "OwnerKey" = "8:_8E4511BBE0D94177B96D51C8642F54E0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_4B0F100BF69BDD12994071136D8D05A7"
-        "OwnerKey" = "8:_8E4511BBE0D94177B96D51C8642F54E0"
+        "OwnerKey" = "8:_E8DAB720C8215DD1290F02AD859ABF1B"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -106,13 +106,13 @@
         "Entry"
         {
         "MsmKey" = "8:_5DFB80BC96418F96DC0A6AD2EC1E6A24"
-        "OwnerKey" = "8:_4B0F100BF69BDD12994071136D8D05A7"
+        "OwnerKey" = "8:_8E4511BBE0D94177B96D51C8642F54E0"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_5DFB80BC96418F96DC0A6AD2EC1E6A24"
-        "OwnerKey" = "8:_8E4511BBE0D94177B96D51C8642F54E0"
+        "OwnerKey" = "8:_4B0F100BF69BDD12994071136D8D05A7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -173,12 +173,6 @@
         {
         "MsmKey" = "8:_E8DAB720C8215DD1290F02AD859ABF1B"
         "OwnerKey" = "8:_8E4511BBE0D94177B96D51C8642F54E0"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_28D4110EB135564D5BD83533AD8EC6FA"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -265,6 +259,12 @@
         "OwnerKey" = "8:_C918260AB5A87310F810CBE8A62FAF68"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_28D4110EB135564D5BD83533AD8EC6FA"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -283,6 +283,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
         "Release"
         {
@@ -299,6 +307,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -986,20 +1002,6 @@
             "Icon" = "8:"
             "Feature" = "8:"
             }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_5DE790D1C2CE4698B52FCAC7C7E8B87E"
-            {
-            "Name" = "8:ECODataMappe"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_505699C5AD3C4F4CA3BFFD8E92A47FA2"
-            "Folder" = "8:_9075FB3B33354C86BDFF2EFAE427F241"
-            "WorkingFolder" = "8:_5580E78709004355A1C4972E55357F82"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_AAE2F2BEA5624D70821782D66B291070"
             {
             "Name" = "8:CementControl"
@@ -1415,7 +1417,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8E4511BBE0D94177B96D51C8642F54E0"
             {
-            "SourcePath" = "8:"
+            "SourcePath" = "8:..\\CementControl\\obj\\Debug\\CementControl.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5B9F73C376C44E519F13071B7FD4EE1D"
