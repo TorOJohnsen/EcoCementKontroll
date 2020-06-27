@@ -120,11 +120,13 @@ namespace CementControl
 
             if (_powerSupplyComPort == "")
             {
-                string message = "Silo kontroller";
-                string title = "Plug inn silo kontroller ... ";
-                MessageBox.Show(message, title);
+                string title = "Silo tilkobling";
+                string message1 = "Dra ut plugg for silo tilkobling om denne er tilkoblet, trykk deretter OK";
+                string message2 = "Plug inn silo tilkobling og trykk OK";
+                MessageBox.Show(message1, title);
+                
 
-                var disc = new DiscoverSerialConnections(_powerSupplyConfig);
+                var disc = new DiscoverSerialConnections(_powerSupplyConfig, title, message2);
                 disc.Run();
 
             }
@@ -140,11 +142,13 @@ namespace CementControl
         {
             if (_scaleComPort == "")
             {
-                string message = "Vekt kontroller";
-                string title = "Plug inn vekt  ... ";
-                MessageBox.Show(message, title);
+                string title = "Vekt tilkobling";
+                string message1 = "Dra up plugg for vekt tilkobling om denne er tilkoblet, trykk deretter OK";
+                string message2 = "Plug inn vekt tilkobling og trykk OK";
 
-                var disc = new DiscoverSerialConnections(_weightScaleConfig);
+                MessageBox.Show(message1, title);
+
+                var disc = new DiscoverSerialConnections(_weightScaleConfig, title, message2);
                 disc.Run();
 
             }

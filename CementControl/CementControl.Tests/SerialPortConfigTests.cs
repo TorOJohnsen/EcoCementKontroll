@@ -29,7 +29,7 @@ namespace CementControl.Tests
             var cfg2 = new SerialPortConfig(_connString2);
 
 
-            DiscoverSerialConnections disc = new DiscoverSerialConnections(cfg1.GetConnectionObject());
+            DiscoverSerialConnections disc = new DiscoverSerialConnections(cfg1.GetConnectionObject(), "TestTitle", "TestMessage");
             var conf  = disc.Run();
 
 

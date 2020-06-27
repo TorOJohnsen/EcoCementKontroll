@@ -218,12 +218,16 @@ namespace CementControl
     public class DiscoverSerialConnections
     {
         SerialPortConfigParameters _port;
+        private readonly string _windowMessage;
+        private readonly string _windowTitle;
         private readonly ILogger _logger = Log.ForContext<DiscoverSerialConnections>();
 
 
-        public DiscoverSerialConnections(SerialPortConfigParameters port)
+        public DiscoverSerialConnections(SerialPortConfigParameters port, string windowTitle, string windowMessage)
         {
             _port = port;
+            _windowMessage = windowMessage;
+            _windowTitle = windowTitle;
         }
 
 
@@ -235,6 +239,8 @@ namespace CementControl
             // Get port list
             List<string> comms = SerialPort.GetPortNames().ToList();
             List<string> added;
+
+            MessageBox.Show(_windowMessage, _windowTitle);
 
             _logger.Debug($"Devices connected start: {comms.Count}");
 

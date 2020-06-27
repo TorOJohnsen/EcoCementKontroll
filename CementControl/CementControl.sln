@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CementControl", "CementCont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CementControl.Tests", "CementControl.Tests\CementControl.Tests.csproj", "{A32CAD65-8F5E-4693-8D39-EFE69A88C9AF}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Installer", "Installer\Installer.vdproj", "{875A8CA5-D970-4143-AF78-46362C2184A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,7 +22,9 @@ Global
 		{A32CAD65-8F5E-4693-8D39-EFE69A88C9AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A32CAD65-8F5E-4693-8D39-EFE69A88C9AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A32CAD65-8F5E-4693-8D39-EFE69A88C9AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A32CAD65-8F5E-4693-8D39-EFE69A88C9AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{875A8CA5-D970-4143-AF78-46362C2184A5}.Debug|Any CPU.ActiveCfg = Debug
+		{875A8CA5-D970-4143-AF78-46362C2184A5}.Release|Any CPU.ActiveCfg = Release
+		{875A8CA5-D970-4143-AF78-46362C2184A5}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
