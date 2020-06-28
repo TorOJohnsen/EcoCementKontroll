@@ -43,8 +43,12 @@ namespace CementControl.Models
 
         private string ConvertToCsv(CementData cementData)
         {
+
+            string desc = cementData.Description.Replace(_sep, "-");
+            
+            
             string var =
-                $"{DateTime.Now}{_sep}{cementData.Description}{_sep}{cementData.State}{_sep}{cementData.CurrentWeight}{_sep}{cementData.CurrentVoltage}{_sep}{cementData.CementLoadGoal}{_sep}{cementData.CementLoaded}{_sep}{cementData.StartingWeight}{_sep}{Environment.NewLine}";
+                $"{DateTime.Now}{_sep}{desc}{_sep}{cementData.State}{_sep}{cementData.CurrentWeight}{_sep}{cementData.CurrentVoltage}{_sep}{cementData.CementLoadGoal}{_sep}{cementData.CementLoaded}{_sep}{cementData.StartingWeight}{_sep}{Environment.NewLine}";
             return var;
         }
 

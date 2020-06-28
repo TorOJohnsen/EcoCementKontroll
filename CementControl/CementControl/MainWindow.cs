@@ -35,6 +35,10 @@ namespace CementControl
 
         delegate void SetTextCallbackCurrentWeightDisplay(string text);
         delegate void SetTextCallbackCurrentLoadedCementDisplay(string text);
+        delegate void SetCallbackUpdateRunButtonStatus(bool isEnabled);
+
+
+
         /*
         This exception was originally thrown at this call stack:
         [External Code]
@@ -171,7 +175,7 @@ namespace CementControl
             if (_isPowerSupplyTestMode)
             {
                 psSerialConnection = new SerialConnectionPsTest();
-                color = Color.OrangeRed;
+                color = Color.DarkOrange;
             }
             else
             {
@@ -249,12 +253,14 @@ namespace CementControl
             }
         }
 
+
+
         private void SetTextLoadedCementWeight(string text)
         {
             // InvokeRequired required compares the thread ID of the
             // calling thread to the thread ID of the creating thread.
             // If these threads are different, it returns true.
-            if (this.labelReadWeight.InvokeRequired)
+            if (this.weight_loaded.InvokeRequired)
             {
                 SetTextCallbackCurrentLoadedCementDisplay d = new SetTextCallbackCurrentLoadedCementDisplay(SetTextLoadedCementWeight);
                 this.Invoke(d, new object[] { text });
@@ -301,8 +307,29 @@ namespace CementControl
 
         private void CompletedLoad(object sender, EventArgs e)
         {
-            startLoadWeight.Enabled = true;
+            SetStartLoadButtonEnabledState(true);
         }
+
+
+
+        private void SetStartLoadButtonEnabledState(bool isEnabled)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.startLoadWeight.InvokeRequired)
+            {
+                SetCallbackUpdateRunButtonStatus d = new SetCallbackUpdateRunButtonStatus(SetStartLoadButtonEnabledState);
+                this.Invoke(d, new object[] { isEnabled });
+            }
+            else
+            {
+                this.startLoadWeight.Enabled = isEnabled;
+            }
+        }
+
+
+
 
 
 
