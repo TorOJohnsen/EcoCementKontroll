@@ -1036,7 +1036,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CementKontroll"
         "ProductCode" = "8:{9E397692-2B5C-4485-B425-387E4FDC3501}"
-        "PackageCode" = "8:{780A89AD-28CF-4437-AA21-A85E4D8D6C8C}"
+        "PackageCode" = "8:{71F2C205-F79F-4BCA-AFB9-32DFB0B00720}"
         "UpgradeCode" = "8:{6E887C49-07E6-439B-9E5A-6F727A7C5FB3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1186,7 +1186,7 @@
             }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B077B32CE3FE4F678603015653E17A77"
             {
-            "Name" = "8:ECOdata"
+            "Name" = "8:DataMappe"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1599,7 +1599,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8E4511BBE0D94177B96D51C8642F54E0"
             {
-            "SourcePath" = "8:..\\CementControl\\obj\\Release\\CementControl.exe"
+            "SourcePath" = "8:..\\CementControl\\obj\\Debug\\CementControl.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5B9F73C376C44E519F13071B7FD4EE1D"

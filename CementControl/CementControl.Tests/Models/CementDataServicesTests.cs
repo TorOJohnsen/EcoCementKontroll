@@ -21,9 +21,9 @@ namespace CementControl.Models.Tests
             DataFileHandle dataFileHandle = new DataFileHandle(@"c:/temp/dataFile.csv");
             CementDataServices cementDataServices = new CementDataServices(dataFileHandle);
 
-            CementData c1 = new CementData("Hole", 1.10, ExecutionState.Loading,2.20, 3.30, 4.40, 5.50);
-            CementData c2 = new CementData("Hole", 1.11, ExecutionState.Loading,2.21, 3.31, 4.41, 5.51);
-            CementData c3 = new CementData("Hole", 1.12, ExecutionState.Loading,2.22, 3.32, 4.42, 5.52);
+            CementData c1 = new CementData("Hole", 1.10, 1.10, ExecutionState.Loading,2.20, 3.30, 4.40, 5.50);
+            CementData c2 = new CementData("Hole", 1.11, 1.10, ExecutionState.Loading,2.21, 3.31, 4.41, 5.51);
+            CementData c3 = new CementData("Hole", 1.12, 1.10, ExecutionState.Loading,2.22, 3.32, 4.42, 5.52);
 
             cementDataServices.SaveCementData(c1);
             cementDataServices.SaveCementData(c2);

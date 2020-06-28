@@ -98,7 +98,7 @@
             this.desiredCementLoad.Name = "desiredCementLoad";
             this.desiredCementLoad.Size = new System.Drawing.Size(143, 29);
             this.desiredCementLoad.TabIndex = 4;
-            this.desiredCementLoad.Text = "50";
+            this.desiredCementLoad.Text = "80";
             this.desiredCementLoad.WordWrap = false;
             // 
             // panel3

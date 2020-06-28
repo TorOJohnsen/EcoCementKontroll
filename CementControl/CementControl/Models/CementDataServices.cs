@@ -24,7 +24,7 @@ namespace CementControl.Models
         {
             _dataFileHandle = dataFileHandle;
 
-            var header = $"Dato{_sep}Description{_sep}State{_sep}CurrentWeight{_sep}CurrentVoltage{_sep}CementLoadGoal{_sep}CementLoaded{_sep}StartingWeight{_sep}{Environment.NewLine}";
+            var header = $"Dato{_sep}Description{_sep}State{_sep}CurrentWeight{_sep}AverageWeight{_sep}CurrentVoltage{_sep}CementLoadGoal{_sep}CementLoaded{_sep}StartingWeight{_sep}{Environment.NewLine}";
             SaveCementData(header);
         }
 
@@ -48,7 +48,7 @@ namespace CementControl.Models
             
             
             string var =
-                $"{DateTime.Now}{_sep}{desc}{_sep}{cementData.State}{_sep}{cementData.CurrentWeight}{_sep}{cementData.CurrentVoltage}{_sep}{cementData.CementLoadGoal}{_sep}{cementData.CementLoaded}{_sep}{cementData.StartingWeight}{_sep}{Environment.NewLine}";
+                $"{DateTime.Now}{_sep}{desc}{_sep}{cementData.State}{_sep}{cementData.CurrentWeight}{_sep}{cementData.AverageWeight}{_sep}{cementData.CurrentVoltage}{_sep}{cementData.CementLoadGoal}{_sep}{cementData.CementLoaded}{_sep}{cementData.StartingWeight}{_sep}{Environment.NewLine}";
             return var;
         }
 

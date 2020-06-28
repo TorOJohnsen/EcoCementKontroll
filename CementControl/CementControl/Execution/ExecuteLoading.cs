@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CementControl.DataAccess;
 using CementControl.Models;
 using Serilog;
@@ -19,7 +20,11 @@ namespace CementControl.Execution
         private double _cementLoaded = 0.0;
         private double _currentVoltage = 0.0;
         private double _startingWeigth = 0.0;
-        //private double _averageWeight = 0.0;
+        private double _averageWeight = 0.0;
+
+        private readonly Buffer<double> _avgBuffer;
+        private readonly int _numReadingsForAverage = 2;
+
 
 
         private ExecutionState _executionState;
@@ -33,7 +38,10 @@ namespace CementControl.Execution
             _dbServices = dbServices;
             _handlerRs232WeigthScale = handlerRs232WeigthScale;
             _handlerRs232PowerSupply = handlerRs232PowerSupply;
+            _avgBuffer = new Buffer<double>(_numReadingsForAverage);
             _executionState = ExecutionState.Init;
+
+            _logger.Information($"Average taken over {_numReadingsForAverage} readings");
         }
 
 
@@ -44,7 +52,8 @@ namespace CementControl.Execution
 
             // Update variables
             _cementLoadGoal = cementToBeLoaded;
-            _startingWeigth = _currentSiloWeight;
+            //_startingWeigth = _currentSiloWeight;
+            _startingWeigth = _averageWeight;
             _description = description;
             _cementLoaded = 0.0;
 
@@ -80,7 +89,8 @@ namespace CementControl.Execution
         {
             if (_executionState == ExecutionState.Loading)
             {
-                _cementLoaded = _startingWeigth -_currentSiloWeight;
+                //_cementLoaded = _startingWeigth -_currentSiloWeight;
+                _cementLoaded = _startingWeigth -_averageWeight;
 
                 if (IsFinishedLoading())
                 {
@@ -122,6 +132,8 @@ namespace CementControl.Execution
         {
             _logger.Debug($"CurrentWeight: {weight:F1}kg");
             _currentSiloWeight = weight;
+            _avgBuffer.Add(weight);
+            _averageWeight = Average(_avgBuffer);
         }
 
         public void UpdateVoltageSetting(double voltage)
@@ -147,8 +159,28 @@ namespace CementControl.Execution
 
         internal CementData GenerateCementData()
         {
-            return  (new CementData(_description,_currentSiloWeight,_executionState,_currentVoltage, _cementLoadGoal, _cementLoaded, _startingWeigth));
+            return  (new CementData(_description,_currentSiloWeight, _averageWeight, _executionState,_currentVoltage, _cementLoadGoal, _cementLoaded, _startingWeigth));
         }
+
+
+        private double Average(Buffer<double> b)
+        {
+            double sum = 0.0;
+            foreach (var d in b)
+            {
+                sum += d;
+            }
+
+            if (b.Count == 0)
+            {
+                return 0.0;
+            }
+
+            return sum / b.Count;
+        }
+
+
+
 
     }
 
@@ -161,4 +193,20 @@ namespace CementControl.Execution
         StoppedLoading,
         FinishedLoading
     }
+
+
+    public class Buffer<T> : Queue<T>
+    {
+        private int? maxCapacity { get; set; }
+
+        public Buffer() { maxCapacity = null; }
+        public Buffer(int capacity) { maxCapacity = capacity; }
+
+        public void Add(T newElement)
+        {
+            if (this.Count == (maxCapacity ?? -1)) this.Dequeue(); // no limit if maxCapacity = null
+            this.Enqueue(newElement);
+        }
+    }
+
 }

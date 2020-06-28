@@ -3,6 +3,7 @@ using System;
 using System.Configuration;
 using System.Drawing;
 using System.IO.Ports;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using CementControl.DataAccess;
@@ -75,7 +76,10 @@ namespace CementControl
 
             InitConfigFileItems();
 
+
         }
+
+
 
 
         public void InitiateSystemInterfacesAndExecution()

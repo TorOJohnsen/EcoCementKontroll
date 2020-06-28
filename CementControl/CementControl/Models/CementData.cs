@@ -15,6 +15,7 @@ namespace CementControl.Models
         public string Description { get; set; }
         
         public double CurrentWeight { get; set; }
+        public double AverageWeight { get; set; }
 
         public double CurrentVoltage { get; set; }
 
@@ -27,11 +28,12 @@ namespace CementControl.Models
 
 
 
-        public CementData(string description, double currentWeight, ExecutionState state, double currentVoltage, double cementLoadGoal, double cementLoaded, double startingWeight)
+        public CementData(string description, double currentWeight, double averageWeight, ExecutionState state, double currentVoltage, double cementLoadGoal, double cementLoaded, double startingWeight)
         {
             Date = DateTime.Now;
             Description = description;
             CurrentWeight = currentWeight;
+            AverageWeight = averageWeight;
             CurrentVoltage = currentVoltage;
             State = state.ToString();
             CementLoadGoal = cementLoadGoal;
