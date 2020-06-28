@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using CementControl.DataAccess;
+using ServiceStack.Text;
 
 namespace CementControl.Models
 {
@@ -14,19 +16,30 @@ namespace CementControl.Models
 
     public class CementDataServices : ICementDataServices
     {
-        private readonly CementContext _cementContext;
+        private readonly DataFileHandle _dataFileHandle;
+        private readonly string _sep = ",";
 
-        public CementDataServices(CementContext cementContext)
+        public CementDataServices(DataFileHandle dataFileHandle)
         {
-            _cementContext = cementContext;
+            _dataFileHandle = dataFileHandle;
 
         }
 
         public void SaveCementData(CementData cementData)
         {
-            _cementContext.CementDatas.Add(cementData);
-            _cementContext.SaveChanges();
+            string data = ConvertToCsv(cementData);
+            _dataFileHandle.WriteData(data);
         }
+
+
+        private string ConvertToCsv(CementData cementData)
+        {
+            string var =
+                $"{DateTime.Now}{_sep}{cementData.Description}{_sep}{cementData.State}{_sep}{cementData.CurrentWeight}{_sep}{cementData.CurrentVoltage}{_sep}{cementData.CementLoadGoal}{_sep}{cementData.CementLoaded}{_sep}{cementData.StartingWeight}{_sep}{Environment.NewLine}";
+            return var;
+        }
+
+
 
     }
 }

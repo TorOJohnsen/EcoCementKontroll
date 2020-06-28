@@ -16,7 +16,7 @@ namespace CementControl
 
         //static Autofac.IContainer Container { get; set; }
 
-        private CementContext db;
+        private DataFileHandle dataHandle;
 
         private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
@@ -51,7 +51,7 @@ namespace CementControl
             InitializeComponent();
 
             // db context
-            db = new CementContext();
+            dataHandle = new DataFileHandle(@"c:\temp\dude.txt");
 
             // Initialize logging
             App.ConfigureLogging();
@@ -74,7 +74,7 @@ namespace CementControl
             InitPowerSupply();
 
 
-            var cdb = new CementDataServices(db);
+            var cdb = new CementDataServices(dataHandle);
 
 
             _execute = new ExecuteLoading(cdb, _handlerRs232WeigthScale, _handlerRs232PowerSupply);

@@ -41,9 +41,6 @@
     <Reference Include="AutofacSerilogIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d672c67444a98ac9, processorArchitecture=MSIL">
       <HintPath>..\packages\AutofacSerilogIntegration.3.0.0\lib\net461\AutofacSerilogIntegration.dll</HintPath>
     </Reference>
-    <Reference Include="CsvHelper, Version=15.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsvHelper.15.0.5\lib\net47\CsvHelper.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.AsyncInterfaces.1.1.1\lib\net461\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
@@ -62,11 +59,24 @@
     <Reference Include="Serilog.Sinks.Trace, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.Sinks.Trace.2.1.0\lib\net45\Serilog.Sinks.Trace.dll</HintPath>
     </Reference>
+    <Reference Include="ServiceStack.Text, Version=5.0.0.0, Culture=neutral, PublicKeyToken=02c12cbda47e6587, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.5.9.0\lib\net45\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.6.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.7.1\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -94,15 +104,6 @@
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="HandlerRs232PowerSupply.cs" />
-    <Compile Include="Migrations\202006212105450_Initial.cs" />
-    <Compile Include="Migrations\202006212105450_Initial.designer.cs">
-      <DependentUpon>202006212105450_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\202006222342057_Reworkmodel.cs" />
-    <Compile Include="Migrations\202006222342057_Reworkmodel.designer.cs">
-      <DependentUpon>202006222342057_Reworkmodel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\CementData.cs" />
     <Compile Include="Models\CementDataServices.cs" />
     <Compile Include="Program.cs" />
@@ -113,12 +114,6 @@
     <Compile Include="HandlerRs232WeigthScale.cs" />
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006212105450_Initial.resx">
-      <DependentUpon>202006212105450_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202006222342057_Reworkmodel.resx">
-      <DependentUpon>202006222342057_Reworkmodel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
