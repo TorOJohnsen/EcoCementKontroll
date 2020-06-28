@@ -108,6 +108,7 @@
     <Compile Include="Models\CementDataServices.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerialConnectionPsTest.cs" />
     <Compile Include="SerialConnectionScaleTest.cs" />
     <Compile Include="SerialConnection.cs" />
     <Compile Include="SerialPortConfig.cs" />

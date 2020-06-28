@@ -10,11 +10,6 @@ namespace CementControl.Models
 {
     public class CementData
     {
-        [Key]
-        public int Id { get; set; }
-        
-        [DataType(DataType.DateTime)]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm:ss:fff }")]
         public DateTime Date { get; set; }
         
         public string Description { get; set; }

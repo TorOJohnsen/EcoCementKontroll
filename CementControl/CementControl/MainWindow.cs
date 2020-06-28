@@ -16,7 +16,7 @@ namespace CementControl
 
         //static Autofac.IContainer Container { get; set; }
 
-        private DataFileHandle dataHandle;
+        private readonly DataFileHandle _dataHandle;
 
         private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
@@ -26,12 +26,12 @@ namespace CementControl
 
         private static ExecuteLoading _execute;
 
-        private static ISerialConnection iSerialConnection;
-
         private string _scaleComPort;
         private string _powerSupplyComPort;
 
         private bool _isWeightScaleTestMode;
+        private bool _isPowerSupplyTestMode;
+
 
         delegate void SetTextCallbackCurrentWeightDisplay(string text);
         delegate void SetTextCallbackCurrentLoadedCementDisplay(string text);
@@ -51,7 +51,9 @@ namespace CementControl
             InitializeComponent();
 
             // db context
-            dataHandle = new DataFileHandle(@"c:\temp\dude.txt");
+            string dataFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\ECO\Datafiles\CementLog.{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+
+            _dataHandle = new DataFileHandle(dataFile);
 
             // Initialize logging
             App.ConfigureLogging();
@@ -74,7 +76,7 @@ namespace CementControl
             InitPowerSupply();
 
 
-            var cdb = new CementDataServices(dataHandle);
+            var cdb = new CementDataServices(_dataHandle);
 
 
             _execute = new ExecuteLoading(cdb, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
@@ -105,6 +107,7 @@ namespace CementControl
             _scaleComPort = ConfigurationManager.AppSettings["app:weightScalePort"];
             _powerSupplyComPort = ConfigurationManager.AppSettings["app:powerSupplyPort"];
             _isWeightScaleTestMode = Convert.ToBoolean(ConfigurationManager.AppSettings["app:scaleTestMode"]);
+            _isPowerSupplyTestMode = Convert.ToBoolean(ConfigurationManager.AppSettings["app:powerSupplyTestMode"]);
 
             var cfgPwrSupply = new SerialPortConfig(ConfigurationManager.AppSettings["app:pwrSupplySerialConfig"]);
             var cfgWeightScale = new SerialPortConfig(ConfigurationManager.AppSettings["app:scaleSerialConfig"]);
@@ -161,10 +164,21 @@ namespace CementControl
 
         private void InitPowerSupply()
         {
-            iSerialConnection = new SerialConnection();
 
+            ISerialConnection psSerialConnection;
+            Color color = Color.Green;
 
-            _handlerRs232PowerSupply = new HandlerRs232PowerSupply(iSerialConnection);
+            if (_isPowerSupplyTestMode)
+            {
+                psSerialConnection = new SerialConnectionPsTest();
+                color = Color.OrangeRed;
+            }
+            else
+            {
+                psSerialConnection = new SerialConnection();
+            }
+            
+            _handlerRs232PowerSupply = new HandlerRs232PowerSupply(psSerialConnection);
             _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity, 
                                                     _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake, 
                                                     _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
@@ -174,7 +188,7 @@ namespace CementControl
             // Initialize to off
             _handlerRs232PowerSupply.SetVoltage(0.0);
 
-            UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", Color.Green);
+            UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", color);
 
 
 
@@ -184,7 +198,7 @@ namespace CementControl
         private void ReadVoltageSetting(object sender, string reading)
         {
             var readingV = Convert.ToDouble(reading);
-            _execute.UpdateVoltageSetting(readingV);
+            _execute?.UpdateVoltageSetting(readingV);
             Log.Debug($"Reading form power supply: {reading}");
         }
 
@@ -194,17 +208,18 @@ namespace CementControl
         private void InitWeightScale()
         {
             Color color = Color.Green;
+            ISerialConnection scaleSerialConnection;
             if (_isWeightScaleTestMode)
             {
-                iSerialConnection = new SerialConnectionScaleTest();
+                scaleSerialConnection = new SerialConnectionScaleTest();
                 color = Color.DarkOrange;
             }
             else
             {
-                iSerialConnection = new SerialConnection();
+                scaleSerialConnection = new SerialConnection();
             }
 
-            _handlerRs232WeigthScale = new HandlerRs232WeigthScale(iSerialConnection);
+            _handlerRs232WeigthScale = new HandlerRs232WeigthScale(scaleSerialConnection);
             _handlerRs232WeigthScale.OpenConnection(_weightScaleConfig.ComPort, _weightScaleConfig.BaudRate, _weightScaleConfig.Parity,
                                                     _weightScaleConfig.StopBits, _weightScaleConfig.DataBits, _weightScaleConfig.Handshake,
                                                     _weightScaleConfig.NewLine, _weightScaleConfig.ReadMode);
@@ -298,6 +313,7 @@ namespace CementControl
             
             _handlerRs232PowerSupply?.SetVoltage(0.0);
             _handlerRs232PowerSupply?.ClosePort();
+            _dataHandle.Close();
         }
 
         private void stopLoadWeight_Click(object sender, EventArgs e)

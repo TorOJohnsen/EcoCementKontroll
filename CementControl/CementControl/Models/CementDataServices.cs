@@ -19,17 +19,26 @@ namespace CementControl.Models
         private readonly DataFileHandle _dataFileHandle;
         private readonly string _sep = ",";
 
+
         public CementDataServices(DataFileHandle dataFileHandle)
         {
             _dataFileHandle = dataFileHandle;
 
+            var header = $"Dato{_sep}Description{_sep}State{_sep}CurrentWeight{_sep}CurrentVoltage{_sep}CementLoadGoal{_sep}CementLoaded{_sep}StartingWeight{_sep}{Environment.NewLine}";
+            SaveCementData(header);
         }
 
         public void SaveCementData(CementData cementData)
         {
             string data = ConvertToCsv(cementData);
-            _dataFileHandle.WriteData(data);
+            SaveCementData(data);
         }
+
+        private void SaveCementData(string text)
+        {
+            _dataFileHandle.WriteData(text);
+        }
+
 
 
         private string ConvertToCsv(CementData cementData)

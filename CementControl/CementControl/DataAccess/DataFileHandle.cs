@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Serilog;
+using ServiceStack;
 
 namespace CementControl.DataAccess
 {
@@ -32,6 +33,7 @@ namespace CementControl.DataAccess
         public void WriteData(string data)
         {
             _sb.Append(data);
+            FlushWhenBufferLarge();
 
         }
 
