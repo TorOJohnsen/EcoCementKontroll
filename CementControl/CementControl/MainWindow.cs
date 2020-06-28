@@ -36,6 +36,9 @@ namespace CementControl
         delegate void SetTextCallbackCurrentWeightDisplay(string text);
         delegate void SetTextCallbackCurrentLoadedCementDisplay(string text);
         delegate void SetCallbackUpdateRunButtonStatus(bool isEnabled);
+        delegate void SetCallbackUpdateStopLoadWeightButtonStatus(bool isEnabled);
+        delegate void SetbuttonConnectSerialStatus(bool isEnabled);
+        delegate void EnableSystemReadTimer(bool isEnabled);
 
 
 
@@ -72,22 +75,33 @@ namespace CementControl
 
             InitConfigFileItems();
 
+        }
+
+
+        public void InitiateSystemInterfacesAndExecution()
+        {
             ConfigurePowerSupplyComPort();
             ConfigureWeightScaleComPort();
 
-
             InitWeightScale();
             InitPowerSupply();
+        }
 
+
+        public void InitiateSystemExecution()
+        {
 
             var cdb = new CementDataServices(_dataHandle);
 
-
             _execute = new ExecuteLoading(cdb, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
             _execute.CementLoadFinished += CompletedLoad;
+
+            //
+
+
         }
 
- 
+
 
         private void IntiGui()
         { 
@@ -166,47 +180,6 @@ namespace CementControl
         }
 
 
-        private void InitPowerSupply()
-        {
-
-            ISerialConnection psSerialConnection;
-            Color color = Color.Green;
-
-            if (_isPowerSupplyTestMode)
-            {
-                psSerialConnection = new SerialConnectionPsTest();
-                color = Color.DarkOrange;
-            }
-            else
-            {
-                psSerialConnection = new SerialConnection();
-            }
-            
-            _handlerRs232PowerSupply = new HandlerRs232PowerSupply(psSerialConnection);
-            _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity, 
-                                                    _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake, 
-                                                    _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
-
-            _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
-            
-            // Initialize to off
-            _handlerRs232PowerSupply.SetVoltage(0.0);
-
-            UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", color);
-
-
-
-        }
-
-
-        private void ReadVoltageSetting(object sender, string reading)
-        {
-            var readingV = Convert.ToDouble(reading);
-            _execute?.UpdateVoltageSetting(readingV);
-            Log.Debug($"Reading form power supply: {reading}");
-        }
-
-
 
 
         private void InitWeightScale()
@@ -231,10 +204,50 @@ namespace CementControl
 
             UpdateLabel(label_weight, $"Vekt tilkobling, {_weightScaleConfig.ComPort}", color);
 
-
+            // TODO: exception
         }
 
 
+
+        private void InitPowerSupply()
+        {
+
+            ISerialConnection psSerialConnection;
+            Color color = Color.Green;
+
+            if (_isPowerSupplyTestMode)
+            {
+                psSerialConnection = new SerialConnectionPsTest();
+                color = Color.DarkOrange;
+            }
+            else
+            {
+                psSerialConnection = new SerialConnection();
+            }
+
+            _handlerRs232PowerSupply = new HandlerRs232PowerSupply(psSerialConnection);
+            _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity,
+                _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake,
+                _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
+
+            _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
+
+            // Initialize to off
+            _handlerRs232PowerSupply.SetVoltage(0.0);
+
+            UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", color);
+
+
+            // TODO: exception
+        }
+
+
+        private void ReadVoltageSetting(object sender, string reading)
+        {
+            var readingV = Convert.ToDouble(reading);
+            _execute?.UpdateVoltageSetting(readingV);
+            Log.Debug($"Reading form power supply: {reading}");
+        }
 
 
         private void SetTextCurrentWeight(string text)
@@ -301,7 +314,7 @@ namespace CementControl
             string description = textBoxDescription.Text;
 
             _execute.StartLoading(cementToBeLoaded, description);
-            startLoadWeight.Enabled = false;
+            SetStartLoadButtonEnabledState(false);
         }
 
 
@@ -331,6 +344,60 @@ namespace CementControl
 
 
 
+        //SetCallbackUpdateStopLoadWeightButtonStatus
+        private void SetStopLoadButtonEnabledState(bool isEnabled)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.startLoadWeight.InvokeRequired)
+            {
+                SetCallbackUpdateStopLoadWeightButtonStatus d = new SetCallbackUpdateStopLoadWeightButtonStatus(SetStopLoadButtonEnabledState);
+                this.Invoke(d, new object[] { isEnabled });
+            }
+            else
+            {
+                this.stopLoadWeight.Enabled = isEnabled;
+            }
+        }
+
+
+
+
+        private void SetButtonConnectSerialEnabledState(bool isEnabled)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.buttonConnectSerial.InvokeRequired)
+            {
+                SetbuttonConnectSerialStatus d = new SetbuttonConnectSerialStatus(SetButtonConnectSerialEnabledState);
+                this.Invoke(d, new object[] { isEnabled });
+            }
+            else
+            {
+                this.buttonConnectSerial.Enabled = isEnabled;
+            }
+        }
+
+
+        private void EnableSystemReadTimerEnabledState(bool isEnabled)
+        {
+            // InvokeRequired required compares the thread ID of the
+            // calling thread to the thread ID of the creating thread.
+            // If these threads are different, it returns true.
+            if (this.buttonConnectSerial.InvokeRequired)
+            {
+                EnableSystemReadTimer d = new EnableSystemReadTimer(EnableSystemReadTimerEnabledState);
+                this.Invoke(d, new object[] { isEnabled });
+            }
+            else
+            {
+                this.readWeightTimer.Enabled = isEnabled;
+            }
+        }
+
+
 
 
         // Exit Handler
@@ -346,6 +413,23 @@ namespace CementControl
         private void stopLoadWeight_Click(object sender, EventArgs e)
         {
             _execute.StopLoading();
+        }
+
+        private void buttonConnectSerial_Click(object sender, EventArgs e)
+        {
+            InitiateSystemInterfacesAndExecution();
+
+            // Disable button
+            if (_handlerRs232PowerSupply != null && _handlerRs232WeigthScale != null)
+            {
+                SetButtonConnectSerialEnabledState(false);
+                InitiateSystemExecution();
+
+                // Turn on timer and enable buttons
+                EnableSystemReadTimerEnabledState(true);
+                SetStartLoadButtonEnabledState(true);
+                SetStopLoadButtonEnabledState(true);
+            }
         }
     }
 }

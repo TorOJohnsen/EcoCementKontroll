@@ -45,6 +45,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label_weight = new System.Windows.Forms.Label();
             this.label_powerSupply = new System.Windows.Forms.Label();
+            this.buttonConnectSerial = new System.Windows.Forms.Button();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -52,7 +53,6 @@
             // 
             // readWeightTimer
             // 
-            this.readWeightTimer.Enabled = true;
             this.readWeightTimer.Interval = 3000;
             this.readWeightTimer.Tick += new System.EventHandler(this.readWeightTimer_Tick);
             // 
@@ -61,7 +61,7 @@
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.labelReadWeight);
             this.panel2.Controls.Add(this.label4);
-            this.panel2.Location = new System.Drawing.Point(12, 66);
+            this.panel2.Location = new System.Drawing.Point(12, 86);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(222, 225);
             this.panel2.TabIndex = 4;
@@ -109,7 +109,7 @@
             this.panel3.Controls.Add(this.startLoadWeight);
             this.panel3.Controls.Add(this.label5);
             this.panel3.Controls.Add(this.desiredCementLoad);
-            this.panel3.Location = new System.Drawing.Point(259, 66);
+            this.panel3.Location = new System.Drawing.Point(259, 86);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(306, 225);
             this.panel3.TabIndex = 5;
@@ -137,6 +137,7 @@
             // stopLoadWeight
             // 
             this.stopLoadWeight.BackColor = System.Drawing.Color.Red;
+            this.stopLoadWeight.Enabled = false;
             this.stopLoadWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.stopLoadWeight.Location = new System.Drawing.Point(108, 170);
             this.stopLoadWeight.Name = "stopLoadWeight";
@@ -149,6 +150,7 @@
             // startLoadWeight
             // 
             this.startLoadWeight.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
+            this.startLoadWeight.Enabled = false;
             this.startLoadWeight.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.startLoadWeight.Location = new System.Drawing.Point(9, 170);
             this.startLoadWeight.Name = "startLoadWeight";
@@ -182,7 +184,7 @@
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel4.Controls.Add(this.label2);
             this.panel4.Controls.Add(this.weight_loaded);
-            this.panel4.Location = new System.Drawing.Point(588, 66);
+            this.panel4.Location = new System.Drawing.Point(588, 86);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(200, 225);
             this.panel4.TabIndex = 6;
@@ -204,9 +206,9 @@
             this.label_weight.ForeColor = System.Drawing.Color.Red;
             this.label_weight.Location = new System.Drawing.Point(3, 401);
             this.label_weight.Name = "label_weight";
-            this.label_weight.Size = new System.Drawing.Size(33, 16);
+            this.label_weight.Size = new System.Drawing.Size(112, 16);
             this.label_weight.TabIndex = 7;
-            this.label_weight.Text = "vekt";
+            this.label_weight.Text = "Vekt ikke tilkoblet";
             // 
             // label_powerSupply
             // 
@@ -216,15 +218,28 @@
             this.label_powerSupply.ForeColor = System.Drawing.Color.Red;
             this.label_powerSupply.Location = new System.Drawing.Point(3, 423);
             this.label_powerSupply.Name = "label_powerSupply";
-            this.label_powerSupply.Size = new System.Drawing.Size(41, 16);
+            this.label_powerSupply.Size = new System.Drawing.Size(108, 16);
             this.label_powerSupply.TabIndex = 8;
-            this.label_powerSupply.Text = "skrue";
+            this.label_powerSupply.Text = "Silo ikke tilkoblet";
+            // 
+            // buttonConnectSerial
+            // 
+            this.buttonConnectSerial.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.buttonConnectSerial.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonConnectSerial.Location = new System.Drawing.Point(12, 22);
+            this.buttonConnectSerial.Name = "buttonConnectSerial";
+            this.buttonConnectSerial.Size = new System.Drawing.Size(198, 28);
+            this.buttonConnectSerial.TabIndex = 9;
+            this.buttonConnectSerial.Text = "Koble til vekt og silo";
+            this.buttonConnectSerial.UseVisualStyleBackColor = false;
+            this.buttonConnectSerial.Click += new System.EventHandler(this.buttonConnectSerial_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonConnectSerial);
             this.Controls.Add(this.label_powerSupply);
             this.Controls.Add(this.label_weight);
             this.Controls.Add(this.panel2);
@@ -262,6 +277,7 @@
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Button stopLoadWeight;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button buttonConnectSerial;
     }
 }
 
