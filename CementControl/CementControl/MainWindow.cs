@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using CementControl.DataAccess;
 using CementControl.Execution;
 using CementControl.Models;
+using Microsoft.VisualBasic.FileIO;
 
 namespace CementControl
 {
@@ -18,6 +19,7 @@ namespace CementControl
         //static Autofac.IContainer Container { get; set; }
 
         private readonly DataFileHandle _dataHandle;
+        private readonly string _dataLogFile;
 
         private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
@@ -32,6 +34,9 @@ namespace CementControl
 
         private bool _isWeightScaleTestMode;
         private bool _isPowerSupplyTestMode;
+
+        private readonly ILogger _logger;
+
 
 
         delegate void SetTextCallbackCurrentWeightDisplay(string text);
@@ -56,16 +61,17 @@ namespace CementControl
 
         public MainWindow()
         {
+
             InitializeComponent();
 
             // db context
-            string dataFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\ECO\Datafiles\CementLog.{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+            _dataLogFile = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\ECO\Datafiles\CementLog.{DateTime.Now:yyyyMMdd_HHmmss}.csv";
 
-            _dataHandle = new DataFileHandle(dataFile);
+            _dataHandle = new DataFileHandle(_dataLogFile);
 
             // Initialize logging
             App.ConfigureLogging();
-
+            _logger = Log.ForContext<MainWindow>();
 
             // Init GUI
 
@@ -76,7 +82,31 @@ namespace CementControl
 
             InitConfigFileItems();
 
+        }
 
+
+        private void CopyDataFoldersToGoogleDrive()
+        {
+
+            var sourceDir = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\ECO\";
+            string destDir = ConfigurationManager.AppSettings["app:googleDriveFolder"];
+
+            if (destDir == "")
+            {
+                destDir = $@"{Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)}\Google Drive\CementLastingData\";
+            }
+
+            _logger.Information($"Copy data to GoogleDrive: {sourceDir} to {destDir}");
+
+            try
+            {
+                //FileSystem.CopyDirectory(sourceDir, destDir, UIOption.AllDialogs);
+                FileSystem.CopyDirectory(sourceDir, destDir, false);
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Copy data to GoogleDrive: {e.Message}");
+            }
         }
 
 
@@ -95,13 +125,11 @@ namespace CementControl
         public void InitiateSystemExecution()
         {
 
+            _logger.Information($"Starting execution, logging to {_dataLogFile}");
             var cdb = new CementDataServices(_dataHandle);
 
             _execute = new ExecuteLoading(cdb, _handlerRs232WeigthScale, _handlerRs232PowerSupply);
             _execute.CementLoadFinished += CompletedLoad;
-
-            //
-
 
         }
 
@@ -126,6 +154,9 @@ namespace CementControl
 
         private void InitConfigFileItems()
         {
+
+            _logger.Information($"Initiate config files items");
+
             _scaleComPort = ConfigurationManager.AppSettings["app:weightScalePort"];
             _powerSupplyComPort = ConfigurationManager.AppSettings["app:powerSupplyPort"];
             _isWeightScaleTestMode = Convert.ToBoolean(ConfigurationManager.AppSettings["app:scaleTestMode"]);
@@ -142,6 +173,8 @@ namespace CementControl
 
         private void ConfigurePowerSupplyComPort()
         {
+
+            _logger.Information($"Configure connection to power supply for Silo");
 
             if (_powerSupplyComPort == "")
             {
@@ -165,6 +198,8 @@ namespace CementControl
 
         private void ConfigureWeightScaleComPort()
         {
+            _logger.Information($"Configure connection to weight ");
+
             if (_scaleComPort == "")
             {
                 string title = "Vekt tilkobling";
@@ -188,6 +223,8 @@ namespace CementControl
 
         private void InitWeightScale()
         {
+            _logger.Information($"Initiate connection to weight ");
+
             Color color = Color.Green;
             ISerialConnection scaleSerialConnection;
             if (_isWeightScaleTestMode)
@@ -200,21 +237,29 @@ namespace CementControl
                 scaleSerialConnection = new SerialConnection();
             }
 
-            _handlerRs232WeigthScale = new HandlerRs232WeigthScale(scaleSerialConnection);
-            _handlerRs232WeigthScale.OpenConnection(_weightScaleConfig.ComPort, _weightScaleConfig.BaudRate, _weightScaleConfig.Parity,
-                                                    _weightScaleConfig.StopBits, _weightScaleConfig.DataBits, _weightScaleConfig.Handshake,
-                                                    _weightScaleConfig.NewLine, _weightScaleConfig.ReadMode);
-            _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
+            try
+            {
+                _handlerRs232WeigthScale = new HandlerRs232WeigthScale(scaleSerialConnection);
+                _handlerRs232WeigthScale.OpenConnection(_weightScaleConfig.ComPort, _weightScaleConfig.BaudRate, _weightScaleConfig.Parity,
+                    _weightScaleConfig.StopBits, _weightScaleConfig.DataBits, _weightScaleConfig.Handshake,
+                    _weightScaleConfig.NewLine, _weightScaleConfig.ReadMode);
+                _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
 
-            UpdateLabel(label_weight, $"Vekt tilkobling, {_weightScaleConfig.ComPort}", color);
+                UpdateLabel(label_weight, $"Vekt tilkobling, {_weightScaleConfig.ComPort}", color);
 
-            // TODO: exception
+            }
+            catch (Exception e)
+            {
+                _handlerRs232WeigthScale = null;
+                _logger.Error($"Exception InitPowerSupply: {e.Message}");
+            }
         }
 
 
 
         private void InitPowerSupply()
         {
+            _logger.Information($"Initiate connection to power supply for Silo");
 
             ISerialConnection psSerialConnection;
             Color color = Color.Green;
@@ -229,28 +274,44 @@ namespace CementControl
                 psSerialConnection = new SerialConnection();
             }
 
-            _handlerRs232PowerSupply = new HandlerRs232PowerSupply(psSerialConnection);
-            _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity,
-                _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake,
-                _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
 
-            _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
+            try
+            {
+                _handlerRs232PowerSupply = new HandlerRs232PowerSupply(psSerialConnection);
+                _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity,
+                    _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake,
+                    _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
 
-            // Initialize to off
-            _handlerRs232PowerSupply.SetVoltage(0.0);
+                _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
 
-            UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", color);
+                // Initialize to off
+                _handlerRs232PowerSupply.SetVoltage(0.0);
 
+                UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", color);
 
-            // TODO: exception
+            }
+            catch (Exception e)
+            {
+                _handlerRs232PowerSupply = null;
+                _logger.Error($"Exception InitPowerSupply: {e.Message}");
+            }
         }
 
 
         private void ReadVoltageSetting(object sender, string reading)
         {
-            var readingV = Convert.ToDouble(reading);
-            _execute?.UpdateVoltageSetting(readingV);
-            Log.Debug($"Reading form power supply: {reading}");
+            try
+            {
+                var readingV = Convert.ToDouble(reading);
+                _execute?.UpdateVoltageSetting(readingV);
+                Log.Debug($"Reading form power supply: {reading}");
+
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Reading form power supply: {reading}, {e.Message}");
+            }
+
         }
 
 
@@ -314,7 +375,22 @@ namespace CementControl
         private void startLoadWeight_Click(object sender, EventArgs e)
         {
             // TODO
-            double cementToBeLoaded = Convert.ToDouble(desiredCementLoad.Text);
+            double cementToBeLoaded = 0.0;
+            string readFromGui = desiredCementLoad.Text;
+            readFromGui = readFromGui.Replace(",", ".");
+
+            try
+            {
+                desiredCementLoad.ForeColor = Color.Black;
+                cementToBeLoaded = Convert.ToDouble(desiredCementLoad.Text);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error($"Error converting {readFromGui} desired weight to double {ex.Message}");
+                desiredCementLoad.ForeColor = Color.Red;
+                return;
+            } 
+
             string description = textBoxDescription.Text;
 
             _execute.StartLoading(cementToBeLoaded, description);
@@ -407,18 +483,23 @@ namespace CementControl
         // Exit Handler
         private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
         {
+           
             _handlerRs232WeigthScale?.ClosePort();
             
             _handlerRs232PowerSupply?.SetVoltage(0.0);
             _handlerRs232PowerSupply?.ClosePort();
             _dataHandle.Close();
+
+            CopyDataFoldersToGoogleDrive();
         }
+
 
         private void stopLoadWeight_Click(object sender, EventArgs e)
         {
             _execute.StopLoading();
         }
 
+        
         private void buttonConnectSerial_Click(object sender, EventArgs e)
         {
             InitiateSystemInterfacesAndExecution();

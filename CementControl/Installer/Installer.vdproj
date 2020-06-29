@@ -4,9 +4,9 @@
 "ProjectType" = "8:{978C614F-708E-4E1A-B201-565925725DBA}"
 "IsWebType" = "8:FALSE"
 "ProjectName" = "8:Installer"
-"LanguageId" = "3:1033"
+"LanguageId" = "3:0"
 "CodePage" = "3:1252"
-"UILanguageId" = "3:1033"
+"UILanguageId" = "3:0"
 "SccProjectName" = "8:"
 "SccLocalPath" = "8:"
 "SccAuxPath" = "8:"
@@ -950,7 +950,30 @@
             "Property" = "8:PersonalFolder"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_505699C5AD3C4F4CA3BFFD8E92A47FA2"
+                }
+            }
+            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_5B9F73C376C44E519F13071B7FD4EE1D"
+            {
+            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "Name" = "8:#1925"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:TARGETDIR"
+                "Folders"
+                {
+                }
+            }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_5CD0C2812EAB486496D48504E37A446E"
+            {
+            "Name" = "8:#1915"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:AppDataFolder"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_F2DE654FAE3B4213924B0EA2A7AC56FC"
                     {
                     "Name" = "8:ECO"
                     "AlwaysCreate" = "11:TRUE"
@@ -985,18 +1008,6 @@
                     }
                 }
             }
-            "{3C67513D-01DD-4637-8A68-80971EB9504F}:_5B9F73C376C44E519F13071B7FD4EE1D"
-            {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
-            "Name" = "8:#1925"
-            "AlwaysCreate" = "11:FALSE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Property" = "8:TARGETDIR"
-                "Folders"
-                {
-                }
-            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_B1F9D9E961034BA3BF70003F29D3430A"
             {
             "Name" = "8:#1919"
@@ -1028,22 +1039,22 @@
         }
         "MsiBootstrapper"
         {
-        "LangId" = "3:1033"
+        "LangId" = "3:0"
         "RequiresElevation" = "11:FALSE"
         }
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CementKontroll"
-        "ProductCode" = "8:{9E397692-2B5C-4485-B425-387E4FDC3501}"
-        "PackageCode" = "8:{71F2C205-F79F-4BCA-AFB9-32DFB0B00720}"
+        "ProductCode" = "8:{ABC1FB37-EE38-4FEF-856F-0C38DD496FEC}"
+        "PackageCode" = "8:{1535616A-59C4-4547-BBBC-7B23CA273600}"
         "UpgradeCode" = "8:{6E887C49-07E6-439B-9E5A-6F727A7C5FB3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
-        "RemovePreviousVersions" = "11:FALSE"
+        "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
-        "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.0"
+        "InstallAllUsers" = "11:TRUE"
+        "ProductVersion" = "8:1.5.0"
         "Manufacturer" = "8:EcoInjeksjon"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1156,6 +1167,20 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_350C0D7BE0E544C7AAB8FD8388D7567E"
+            {
+            "Name" = "8:Data mappe"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_F2DE654FAE3B4213924B0EA2A7AC56FC"
+            "Folder" = "8:_9075FB3B33354C86BDFF2EFAE427F241"
+            "WorkingFolder" = "8:_5CD0C2812EAB486496D48504E37A446E"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_48A66D0DD4894D7AACF8F4AFAF51B5E6"
             {
             "Name" = "8:CementControl (Active)"
@@ -1181,21 +1206,7 @@
             "Target" = "8:_8E4511BBE0D94177B96D51C8642F54E0"
             "Folder" = "8:_9075FB3B33354C86BDFF2EFAE427F241"
             "WorkingFolder" = "8:_5B9F73C376C44E519F13071B7FD4EE1D"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B077B32CE3FE4F678603015653E17A77"
-            {
-            "Name" = "8:DataMappe"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_505699C5AD3C4F4CA3BFFD8E92A47FA2"
-            "Folder" = "8:_9075FB3B33354C86BDFF2EFAE427F241"
-            "WorkingFolder" = "8:_5580E78709004355A1C4972E55357F82"
-            "Icon" = "8:"
+            "Icon" = "8:_66059EBB229A4012926C6A4C1F5CF8A5"
             "Feature" = "8:"
             }
         }

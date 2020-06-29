@@ -134,6 +134,11 @@ namespace CementControl.Execution
             _currentSiloWeight = weight;
             _avgBuffer.Add(weight);
             _averageWeight = Average(_avgBuffer);
+
+            if (_executionState == ExecutionState.FinishedLoading)
+            {
+                _executionState = ExecutionState.Init;
+            }
         }
 
         public void UpdateVoltageSetting(double voltage)

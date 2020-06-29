@@ -132,7 +132,7 @@
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(280, 26);
             this.textBoxDescription.TabIndex = 8;
-            this.textBoxDescription.Text = "Hull nr, sted, etc";
+            this.textBoxDescription.Text = "Beskrivelse som logges";
             this.textBoxDescription.WordWrap = false;
             // 
             // stopLoadWeight
@@ -167,9 +167,9 @@
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(5, 12);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(147, 24);
+            this.label5.Size = new System.Drawing.Size(264, 24);
             this.label5.TabIndex = 5;
-            this.label5.Text = "Last sement (kg)";
+            this.label5.Text = "Last sement (kg), uten desimal";
             // 
             // weight_loaded
             // 
