@@ -1046,15 +1046,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CementKontroll"
-        "ProductCode" = "8:{ABC1FB37-EE38-4FEF-856F-0C38DD496FEC}"
-        "PackageCode" = "8:{1535616A-59C4-4547-BBBC-7B23CA273600}"
+        "ProductCode" = "8:{B151CF21-4741-4D1B-B14E-5188E43B1B69}"
+        "PackageCode" = "8:{08FA4F74-D96D-45CA-8475-243DECC1C9BE}"
         "UpgradeCode" = "8:{6E887C49-07E6-439B-9E5A-6F727A7C5FB3}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:1.5.0"
+        "ProductVersion" = "8:1.6.0"
         "Manufacturer" = "8:EcoInjeksjon"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1610,7 +1610,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_8E4511BBE0D94177B96D51C8642F54E0"
             {
-            "SourcePath" = "8:..\\CementControl\\obj\\Debug\\CementControl.exe"
+            "SourcePath" = "8:..\\CementControl\\obj\\Release\\CementControl.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_5B9F73C376C44E519F13071B7FD4EE1D"
