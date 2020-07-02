@@ -136,7 +136,7 @@ namespace CementControl
                 readChunk = sp.ReadExisting();
                 if (string.IsNullOrWhiteSpace(readChunk)) continue;
                 inndata += readChunk.TrimEnd();
-                Debug.Print($".---{readChunk}---");
+                _logger.Debug($".---{readChunk}---");
             }
 
             _logger.Debug($">>>{inndata}<<<");
@@ -174,9 +174,6 @@ namespace CementControl
 
             PortDataRead?.Invoke(this, inndata);
         }
-
-
-
 
     }
 }

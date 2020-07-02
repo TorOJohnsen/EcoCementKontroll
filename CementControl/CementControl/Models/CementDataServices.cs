@@ -37,6 +37,7 @@ namespace CementControl.Models
         private void SaveCementData(string text)
         {
             _dataFileHandle.WriteData(text);
+            _dataFileHandle.FlushLogfile();
         }
 
 

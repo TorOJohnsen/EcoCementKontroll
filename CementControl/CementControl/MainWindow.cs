@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO.Ports;
 using System.Runtime.InteropServices;
@@ -26,6 +27,9 @@ namespace CementControl
 
         private static SerialPortConfigParameters _weightScaleConfig;
         private static SerialPortConfigParameters _powerSupplyConfig;
+
+        private ISerialConnection _scaleSerialConnection;
+        private ISerialConnection _psSerialConnection;
 
         private static ExecuteLoading _execute;
 
@@ -78,9 +82,11 @@ namespace CementControl
             // Initialize app
             //  Container = App.ConfigureDependencyInjection();
 
-            Log.Debug("Test");
+            //Log.Debug("Test");
 
             InitConfigFileItems();
+
+            _logger.Information("Tool initiation MainWindow completed");
 
         }
 
@@ -135,13 +141,6 @@ namespace CementControl
 
 
 
-        private void IntiGui()
-        { 
-            UpdateLabel(label_weight, "Vekt tilkobling .. venter", Color.Red);
-            UpdateLabel(label_powerSupply, "Silo tilkobling .. venter", Color.Red);
-        }
-
-        
         private void UpdateLabel(Label label, string message, Color color)
         {
             label.Text = message;
@@ -223,26 +222,29 @@ namespace CementControl
 
         private void InitWeightScale()
         {
-            _logger.Information($"Initiate connection to weight ");
+            _logger.Information($"Initiate connection to weight scale");
 
             Color color = Color.Green;
-            ISerialConnection scaleSerialConnection;
+            
             if (_isWeightScaleTestMode)
             {
-                scaleSerialConnection = new SerialConnectionScaleTest();
+                _scaleSerialConnection = new SerialConnectionScaleTest();
                 color = Color.DarkOrange;
             }
             else
             {
-                scaleSerialConnection = new SerialConnection();
+                _scaleSerialConnection = new SerialConnection();
             }
 
             try
             {
-                _handlerRs232WeigthScale = new HandlerRs232WeigthScale(scaleSerialConnection);
+                _handlerRs232WeigthScale = new HandlerRs232WeigthScale(_scaleSerialConnection);
                 _handlerRs232WeigthScale.OpenConnection(_weightScaleConfig.ComPort, _weightScaleConfig.BaudRate, _weightScaleConfig.Parity,
                     _weightScaleConfig.StopBits, _weightScaleConfig.DataBits, _weightScaleConfig.Handshake,
                     _weightScaleConfig.NewLine, _weightScaleConfig.ReadMode);
+
+                _logger.Information($"Opened port to Scale");
+
                 _handlerRs232WeigthScale.OnDataRead += DisplayWeight;
 
                 UpdateLabel(label_weight, $"Vekt tilkobling, {_weightScaleConfig.ComPort}", color);
@@ -261,31 +263,29 @@ namespace CementControl
         {
             _logger.Information($"Initiate connection to power supply for Silo");
 
-            ISerialConnection psSerialConnection;
             Color color = Color.Green;
 
             if (_isPowerSupplyTestMode)
             {
-                psSerialConnection = new SerialConnectionPsTest();
+                _psSerialConnection = new SerialConnectionPsTest();
                 color = Color.DarkOrange;
             }
             else
             {
-                psSerialConnection = new SerialConnection();
+                _psSerialConnection = new SerialConnection();
             }
 
 
             try
             {
-                _handlerRs232PowerSupply = new HandlerRs232PowerSupply(psSerialConnection);
+                _handlerRs232PowerSupply = new HandlerRs232PowerSupply(_psSerialConnection);
                 _handlerRs232PowerSupply.OpenConnection(_powerSupplyConfig.ComPort, _powerSupplyConfig.BaudRate, _powerSupplyConfig.Parity,
                     _powerSupplyConfig.StopBits, _powerSupplyConfig.DataBits, _powerSupplyConfig.Handshake,
                     _powerSupplyConfig.NewLine, _powerSupplyConfig.ReadMode);
 
-                _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
+                _logger.Information($"Opened port to Silo");
 
-                // Initialize to off
-                _handlerRs232PowerSupply.SetVoltage(0.0);
+                _handlerRs232PowerSupply.OnDataRead += ReadVoltageSetting;
 
                 UpdateLabel(label_powerSupply, $"Silo tilkobling, {_powerSupplyConfig.ComPort}", color);
 
@@ -355,7 +355,7 @@ namespace CementControl
         {
 
             SetTextCurrentWeight($"{weight:F1}");
-            Log.Debug($"Reading scale: {weight}");
+            _logger.Debug($"Reading scale: {weight}");
 
             _execute.UpdateCurrentWeight(weight);
             _execute.Execution();
@@ -488,8 +488,9 @@ namespace CementControl
             
             _handlerRs232PowerSupply?.SetVoltage(0.0);
             _handlerRs232PowerSupply?.ClosePort();
-            _dataHandle.Close();
-
+            
+            _dataHandle?.Close();
+            
             CopyDataFoldersToGoogleDrive();
         }
 
@@ -502,6 +503,12 @@ namespace CementControl
         
         private void buttonConnectSerial_Click(object sender, EventArgs e)
         {
+            _logger.Information("Entering COM port setup section");
+
+
+            ReadConfiguredPortsFromGui();
+
+
             InitiateSystemInterfacesAndExecution();
 
             // Disable button
@@ -510,11 +517,44 @@ namespace CementControl
                 SetButtonConnectSerialEnabledState(false);
                 InitiateSystemExecution();
 
+                _handlerRs232PowerSupply?.TurnOff();
                 // Turn on timer and enable buttons
                 EnableSystemReadTimerEnabledState(true);
                 SetStartLoadButtonEnabledState(true);
                 SetStopLoadButtonEnabledState(true);
+
+                _logger.Information("Successfully set up COM port setup section");
             }
+            else
+            {
+                _logger.Error(
+                    $"Feil ved oppsett av COM porter porter Silo: {_handlerRs232PowerSupply} og vekt: {_handlerRs232WeigthScale}");
+            }
+        }
+
+        private void ReadConfiguredPortsFromGui()
+        {
+
+            string userEnteredPortPowerSupply = textBoxPowerSupplyComPort.Text;
+            string userEnteredPortScale = textBoxScaleComPort.Text;
+
+            textBoxPowerSupplyComPort.Enabled = false;
+            textBoxScaleComPort.Enabled = false;
+
+            if (userEnteredPortPowerSupply != "")
+            {
+                _powerSupplyComPort = userEnteredPortPowerSupply.ToUpper();
+            }
+
+            if (userEnteredPortScale != "")
+            {
+                _scaleComPort = userEnteredPortScale.ToUpper();
+            }
+        }
+
+        private void buttonDeviceManager_Click(object sender, EventArgs e)
+        {
+            Process.Start("devmgmt.msc");
         }
     }
 }
