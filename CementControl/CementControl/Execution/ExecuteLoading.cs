@@ -58,8 +58,8 @@ namespace CementControl.Execution
             _cementLoaded = 0.0;
 
             // Turn on silo loader
-            _handlerRs232PowerSupply.TurnOn();
-            //_handlerRs232PowerSupply.GetVoltage();
+            _handlerRs232PowerSupply?.TurnOn();
+            //_handlerRs232PowerSupply?.GetVoltage();
 
             // Set execution state
             _executionState = ExecutionState.Loading;
@@ -104,8 +104,8 @@ namespace CementControl.Execution
         private void TurnOffSiloLoader()
         {
             // Turn on silo loader
-            _handlerRs232PowerSupply.TurnOff();
-            _handlerRs232PowerSupply.GetVoltage();
+            _handlerRs232PowerSupply?.TurnOff();
+            _handlerRs232PowerSupply?.GetVoltage();
         }
 
 

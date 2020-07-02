@@ -21,7 +21,7 @@ namespace CementControl
 
         private readonly DataFileHandle _dataHandle;
         private readonly string _dataLogFile;
-
+        
         private static HandlerRs232WeigthScale _handlerRs232WeigthScale;
         private static HandlerRs232PowerSupply _handlerRs232PowerSupply;
 
@@ -38,6 +38,8 @@ namespace CementControl
 
         private bool _isWeightScaleTestMode;
         private bool _isPowerSupplyTestMode;
+
+        private bool _isOnlyConnectingAndLoggingWeight = false;
 
         private readonly ILogger _logger;
 
@@ -120,11 +122,19 @@ namespace CementControl
 
         public void InitiateSystemInterfacesAndExecution()
         {
-            ConfigurePowerSupplyComPort();
-            ConfigureWeightScaleComPort();
+            if (_isOnlyConnectingAndLoggingWeight == false)
+            {
+                ConfigurePowerSupplyComPort();
+                InitPowerSupply();
+            }
+            else
+            {
+                _handlerRs232PowerSupply = null;
+            }
 
+            ConfigureWeightScaleComPort();
             InitWeightScale();
-            InitPowerSupply();
+
         }
 
 
@@ -508,11 +518,12 @@ namespace CementControl
 
             ReadConfiguredPortsFromGui();
 
+            CheckIOnlyLoggingWeight();
 
             InitiateSystemInterfacesAndExecution();
 
             // Disable button
-            if (_handlerRs232PowerSupply != null && _handlerRs232WeigthScale != null)
+            if (_handlerRs232WeigthScale != null && (_isOnlyConnectingAndLoggingWeight || _handlerRs232PowerSupply != null))
             {
                 SetButtonConnectSerialEnabledState(false);
                 InitiateSystemExecution();
@@ -532,6 +543,15 @@ namespace CementControl
             }
         }
 
+        private void CheckIOnlyLoggingWeight()
+        {
+            _isOnlyConnectingAndLoggingWeight = checkBoxOnlyLogWeight.Checked;
+            if (_isOnlyConnectingAndLoggingWeight)
+            {
+                _logger.Information("Not connecting silo, only logging weight data");
+            }
+        }
+
         private void ReadConfiguredPortsFromGui()
         {
 
@@ -544,11 +564,13 @@ namespace CementControl
             if (userEnteredPortPowerSupply != "")
             {
                 _powerSupplyComPort = userEnteredPortPowerSupply.ToUpper();
+                _logger.Information($"User configured COM port for Silo (PS): {_powerSupplyComPort}");
             }
 
             if (userEnteredPortScale != "")
             {
                 _scaleComPort = userEnteredPortScale.ToUpper();
+                _logger.Information($"User configured COM port for Scale: {_scaleComPort}");
             }
         }
 

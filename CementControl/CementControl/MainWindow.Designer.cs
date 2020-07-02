@@ -53,6 +53,7 @@
             this.textBoxPowerSupplyComPort = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.buttonDeviceManager = new System.Windows.Forms.Button();
+            this.checkBoxOnlyLogWeight = new System.Windows.Forms.CheckBox();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -145,7 +146,7 @@
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(372, 30);
             this.textBoxDescription.TabIndex = 8;
-            this.textBoxDescription.Text = "Beskrivelse som skrives i loggen";
+            this.textBoxDescription.Text = "Beskrivelse som lagres i loggen";
             this.textBoxDescription.WordWrap = false;
             // 
             // stopLoadWeight
@@ -312,11 +313,22 @@
             this.buttonDeviceManager.UseVisualStyleBackColor = true;
             this.buttonDeviceManager.Click += new System.EventHandler(this.buttonDeviceManager_Click);
             // 
+            // checkBoxOnlyLogWeight
+            // 
+            this.checkBoxOnlyLogWeight.AutoSize = true;
+            this.checkBoxOnlyLogWeight.Location = new System.Drawing.Point(15, 117);
+            this.checkBoxOnlyLogWeight.Name = "checkBoxOnlyLogWeight";
+            this.checkBoxOnlyLogWeight.Size = new System.Drawing.Size(121, 21);
+            this.checkBoxOnlyLogWeight.TabIndex = 16;
+            this.checkBoxOnlyLogWeight.Text = "Bare logg vekt";
+            this.checkBoxOnlyLogWeight.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.Controls.Add(this.checkBoxOnlyLogWeight);
             this.Controls.Add(this.buttonDeviceManager);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxPowerSupplyComPort);
@@ -370,6 +382,7 @@
         private System.Windows.Forms.TextBox textBoxPowerSupplyComPort;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button buttonDeviceManager;
+        private System.Windows.Forms.CheckBox checkBoxOnlyLogWeight;
     }
 }
 

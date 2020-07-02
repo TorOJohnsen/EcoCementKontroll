@@ -248,11 +248,14 @@ namespace CementControl
 
             _logger.Debug("Plug device in");
 
+            Stopwatch spStopwatch = new Stopwatch();
+            spStopwatch.Start();
 
-            while (SerialPort.GetPortNames().ToList().Count == devices)
+
+            while (SerialPort.GetPortNames().ToList().Count == devices && spStopwatch.ElapsedMilliseconds < 10000)
             {
                 _logger.Debug("Venter ..");
-                Thread.Sleep(50);
+                Thread.Sleep(100);
             }
 
             added = SerialPort.GetPortNames().ToList();

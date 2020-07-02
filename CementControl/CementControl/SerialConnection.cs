@@ -31,7 +31,7 @@ namespace CementControl
     {
 
 
-        private int timeout_ms = 1500;
+        private int _timeoutMs = 1500;
         private SerialPort _mySerialPort;
         public event EventHandler<string> PortDataRead;
         private readonly ILogger _logger = Log.ForContext<SerialConnection>();
@@ -47,42 +47,51 @@ namespace CementControl
         public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
         {
 
-            _mySerialPort = new SerialPort(serialPortNumber);
-
-            _mySerialPort.BaudRate = baudRate;
-            _mySerialPort.Parity = parity;
-            _mySerialPort.StopBits = stopBits;
-            _mySerialPort.DataBits = dataBits;
-            _mySerialPort.Handshake = handshake;
-            _mySerialPort.NewLine = NewLineHelper.ToString(newLine);
-            _readMode = readMode;
-
-            
-            
-            
-            switch (_readMode)
+            try
             {
-                case ReadMode.ReadChunksTillNoneMore:
-                    _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
-                    break;
-                case ReadMode.ReadTillSlashRSlashN:
-                    _mySerialPort.DataReceived += DataReceivedHandlerSlashRSlashN;
-                    break;
-                case ReadMode.ReadLine:
-                    _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
-                    break;
+                _mySerialPort = new SerialPort(serialPortNumber);
+
+                _mySerialPort.BaudRate = baudRate;
+                _mySerialPort.Parity = parity;
+                _mySerialPort.StopBits = stopBits;
+                _mySerialPort.DataBits = dataBits;
+                _mySerialPort.Handshake = handshake;
+                _mySerialPort.NewLine = NewLineHelper.ToString(newLine);
+                _readMode = readMode;
+
+
+
+
+                switch (_readMode)
+                {
+                    case ReadMode.ReadChunksTillNoneMore:
+                        _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
+                        break;
+                    case ReadMode.ReadTillSlashRSlashN:
+                        _mySerialPort.DataReceived += DataReceivedHandlerSlashRSlashN;
+                        break;
+                    case ReadMode.ReadLine:
+                        _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
+                        break;
+                }
+
+
+
+                _mySerialPort.Open();
+                _logger.Debug($"Opened Serial port {serialPortNumber}");
+
+            }
+            catch (Exception e)
+            {
+                _logger.Error($"Exception setting up COMM port {serialPortNumber}:  {e.Message}");
             }
 
-
-
-            _mySerialPort.Open();
-            _logger.Debug($"Opened Serial port {serialPortNumber}");
         }
 
 
         public void SetTimeout(int setTimeout_ms)
         {
-            timeout_ms = setTimeout_ms;
+            _timeoutMs = setTimeout_ms;
         }
 
 
@@ -131,7 +140,7 @@ namespace CementControl
             string readChunk = sp.ReadExisting();
             string inndata = readChunk.TrimEnd();
 
-            while (!string.IsNullOrWhiteSpace(readChunk) && stopwatch.ElapsedMilliseconds < timeout_ms)
+            while (!string.IsNullOrWhiteSpace(readChunk) && stopwatch.ElapsedMilliseconds < _timeoutMs)
             {
                 readChunk = sp.ReadExisting();
                 if (string.IsNullOrWhiteSpace(readChunk)) continue;
