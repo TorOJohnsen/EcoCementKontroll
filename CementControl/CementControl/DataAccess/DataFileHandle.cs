@@ -14,7 +14,7 @@ namespace CementControl.DataAccess
         private readonly ILogger _logger = Log.ForContext<DataFileHandle>();
         private readonly string _dataLogFile;
         private readonly StringBuilder _sb;
-        private readonly int _bufferLenght = 200;
+        private readonly int _bufferLenght = 35;
 
         public DataFileHandle(string dataLogFile)
         {

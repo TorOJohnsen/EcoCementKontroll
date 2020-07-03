@@ -84,6 +84,8 @@ namespace CementControl
             catch (Exception e)
             {
                 _logger.Error($"Exception setting up COMM port {serialPortNumber}:  {e.Message}");
+                _logger.Error($"{e}");
+                throw;
             }
 
         }

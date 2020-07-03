@@ -3,8 +3,10 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.IO.Ports;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using CementControl.DataAccess;
@@ -68,6 +70,8 @@ namespace CementControl
         public MainWindow()
         {
 
+            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(MyHandler);
+
             InitializeComponent();
 
             // db context
@@ -78,6 +82,7 @@ namespace CementControl
             // Initialize logging
             App.ConfigureLogging();
             _logger = Log.ForContext<MainWindow>();
+            _logger.Information("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  New Run  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
             // Init GUI
 
@@ -91,6 +96,28 @@ namespace CementControl
             _logger.Information("Tool initiation MainWindow completed");
 
         }
+
+        static void MyHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            Exception e = (Exception)args.ExceptionObject;
+
+            try
+            {
+                string unHandledExceptionLogFile =
+                    $@"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\ECO\Logfiles\ExceptionLog.{DateTime.Now:yyyyMMdd_HHmmss}.log";
+                StringBuilder sb = new StringBuilder();
+                sb.Append($"-- Exception --{Environment.NewLine}"); 
+                sb.Append(e.Message);
+                sb.Append($"{Environment.NewLine}");
+                sb.Append(e); 
+                File.AppendAllText(unHandledExceptionLogFile, sb.ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(e.ToString(), "Feil i programmet");
+            }
+        }
+
 
 
         private void CopyDataFoldersToGoogleDrive()
@@ -114,6 +141,7 @@ namespace CementControl
             catch (Exception e)
             {
                 _logger.Error($"Copy data to GoogleDrive: {e.Message}");
+                _logger.Error($"{e}");
             }
         }
 
