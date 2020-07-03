@@ -54,6 +54,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.buttonDeviceManager = new System.Windows.Forms.Button();
             this.checkBoxOnlyLogWeight = new System.Windows.Forms.CheckBox();
+            this.labelVers = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -323,11 +324,22 @@
             this.checkBoxOnlyLogWeight.Text = "Bare logg vekt";
             this.checkBoxOnlyLogWeight.UseVisualStyleBackColor = true;
             // 
+            // labelVers
+            // 
+            this.labelVers.AutoSize = true;
+            this.labelVers.Location = new System.Drawing.Point(1008, 528);
+            this.labelVers.Name = "labelVers";
+            this.labelVers.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labelVers.Size = new System.Drawing.Size(46, 17);
+            this.labelVers.TabIndex = 17;
+            this.labelVers.Text = "label8";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.Controls.Add(this.labelVers);
             this.Controls.Add(this.checkBoxOnlyLogWeight);
             this.Controls.Add(this.buttonDeviceManager);
             this.Controls.Add(this.label7);
@@ -383,6 +395,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Button buttonDeviceManager;
         private System.Windows.Forms.CheckBox checkBoxOnlyLogWeight;
+        private System.Windows.Forms.Label labelVers;
     }
 }
 

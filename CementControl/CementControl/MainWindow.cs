@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.IO.Ports;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -95,6 +96,8 @@ namespace CementControl
             InitConfigFileItems();
 
             _logger.Information("Tool initiation MainWindow completed");
+
+            labelVers.Text = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
         }
 
