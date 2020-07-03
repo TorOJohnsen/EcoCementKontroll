@@ -66,7 +66,7 @@ namespace CementControl
 
                 try
                 {
-                    result = Convert.ToDouble(matchValue);
+                    result = Convert.ToDouble(matchValue, CultureInfo.InvariantCulture);
                 }
                 catch (Exception e)
                 {

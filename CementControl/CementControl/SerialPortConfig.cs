@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO.Ports;
 using System.Linq;
 using System.Security.Permissions;
@@ -119,10 +120,10 @@ namespace CementControl
 
 
             Enum.TryParse(connString[0], out _deviceType);
-            _baudRate = Convert.ToInt32(connString[1]);
+            _baudRate = Convert.ToInt32(connString[1], CultureInfo.InvariantCulture);
             Enum.TryParse(connString[2], out _parity);
             Enum.TryParse(connString[3], out _stopBits);
-            _dataBits = Convert.ToInt32(connString[4]);
+            _dataBits = Convert.ToInt32(connString[4], CultureInfo.InvariantCulture);
             Enum.TryParse(connString[5], out _handshake);
             Enum.TryParse(connString[6], out _newLine);
             Enum.TryParse(connString[7], out _readMode);

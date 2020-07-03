@@ -3,6 +3,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.IO.Ports;
 using System.Runtime.InteropServices;
@@ -340,7 +341,7 @@ namespace CementControl
         {
             try
             {
-                var readingV = Convert.ToDouble(reading);
+                var readingV = Convert.ToDouble(reading, CultureInfo.InvariantCulture);
                 _execute?.UpdateVoltageSetting(readingV);
                 Log.Debug($"Reading form power supply: {reading}");
 
@@ -554,10 +555,12 @@ namespace CementControl
             if (_handlerRs232WeigthScale != null && (_isOnlyConnectingAndLoggingWeight || _handlerRs232PowerSupply != null))
             {
                 SetButtonConnectSerialEnabledState(false);
+                _logger.Information("Set up system execution");
                 InitiateSystemExecution();
 
                 _handlerRs232PowerSupply?.TurnOff();
                 // Turn on timer and enable buttons
+                _logger.Information("Enable system execution timer");
                 EnableSystemReadTimerEnabledState(true);
                 SetStartLoadButtonEnabledState(true);
                 SetStopLoadButtonEnabledState(true);

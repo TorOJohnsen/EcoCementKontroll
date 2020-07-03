@@ -46,6 +46,17 @@ namespace CementControl
 
         public void Open(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
         {
+            _logger.Information($"Opening serial port with these params:");
+            _logger.Information($" -- serialPortNumber {serialPortNumber}");
+            _logger.Information($" -- baudRate {baudRate}");
+            _logger.Information($" -- parity {parity}");
+            _logger.Information($" -- stopBits {stopBits}");
+            _logger.Information($" -- dataBits {dataBits}");
+            _logger.Information($" -- handshake {handshake}");
+            _logger.Information($" -- newLine {newLine}");
+            _logger.Information($" -- readMode {readMode}");
+
+
 
             try
             {
@@ -74,8 +85,6 @@ namespace CementControl
                         _mySerialPort.DataReceived += DataReceivedHandlerReadLine;
                         break;
                 }
-
-
 
                 _mySerialPort.Open();
                 _logger.Debug($"Opened Serial port {serialPortNumber}");

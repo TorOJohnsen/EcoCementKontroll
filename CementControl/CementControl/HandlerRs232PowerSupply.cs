@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using System;
 using System.Configuration;
+using System.Globalization;
 using System.IO.Ports;
 
 namespace CementControl
@@ -21,9 +22,9 @@ namespace CementControl
         {
             _serialConnection = serialConnection;
 
-            _voltageOff = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOff"]);
+            _voltageOff = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOff"], CultureInfo.InvariantCulture);
 
-            _voltageOn = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOn"]);
+            _voltageOn = Convert.ToDouble(ConfigurationManager.AppSettings["app:voltageTurnOn"], CultureInfo.InvariantCulture);
         }
 
         public void OpenConnection(string serialPortNumber, int baudRate, Parity parity, StopBits stopBits, int dataBits, Handshake handshake, NewLine newLine, ReadMode readMode)
